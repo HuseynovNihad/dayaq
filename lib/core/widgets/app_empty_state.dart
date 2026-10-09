@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../extensions/context_extensions.dart';
 import '../theme/app_spacing.dart';
 
 class AppEmptyState extends StatelessWidget {
@@ -10,37 +12,39 @@ class AppEmptyState extends StatelessWidget {
     this.icon = Icons.inbox_outlined,
     this.action,
   });
+
   final String title;
   final String message;
   final IconData icon;
   final Widget? action;
 
   @override
-  Widget build(BuildContext context) => Center(
-    child: SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.xl),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            size: 48,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.titleLarge,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(message, textAlign: TextAlign.center),
-          if (action != null) ...[
-            const SizedBox(height: AppSpacing.xl),
-            action!,
+  Widget build(BuildContext context) {
+    return Center(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.all(AppSpacing.xl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 48.r, color: context.colorScheme.onSurfaceVariant),
+            SizedBox(height: AppSpacing.lg),
+            Text(
+              title,
+              style: context.textTheme.titleLarge,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: AppSpacing.sm),
+            Text(
+              message,
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            if (action != null) ...[SizedBox(height: AppSpacing.xl), action!],
           ],
-        ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
