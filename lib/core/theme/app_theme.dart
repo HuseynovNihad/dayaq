@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../constants/app_fonts.dart';
 import 'app_colors.dart';
 import 'app_radius.dart';
 import 'app_typography.dart';
@@ -9,10 +10,12 @@ abstract final class AppTheme {
     final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(AppRadius.md),
     );
+
     final border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(AppRadius.md),
       borderSide: const BorderSide(color: AppColors.border),
     );
+
     final scheme = ColorScheme.fromSeed(seedColor: AppColors.primary).copyWith(
       primary: AppColors.primary,
       onPrimary: AppColors.onPrimary,
@@ -24,11 +27,14 @@ abstract final class AppTheme {
       outline: AppColors.border,
       error: AppColors.error,
     );
+
     return ThemeData(
       useMaterial3: true,
+      fontFamily: AppFonts.primary,
       colorScheme: scheme,
       scaffoldBackgroundColor: AppColors.background,
       textTheme: AppTypography.textTheme.apply(
+        fontFamily: AppFonts.primary,
         bodyColor: AppColors.textPrimary,
         displayColor: AppColors.textPrimary,
       ),

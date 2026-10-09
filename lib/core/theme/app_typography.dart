@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
 abstract final class AppTypography {
-  // Use platform fonts until licensed brand font assets are supplied.
   static const textTheme = TextTheme(
     headlineLarge: TextStyle(
       fontSize: 32,
@@ -30,11 +29,20 @@ abstract final class AppTypography {
       height: 1.4,
       fontWeight: FontWeight.w600,
     ),
-    bodyLarge: TextStyle(fontSize: 16, height: 1.5),
-    bodyMedium: TextStyle(fontSize: 14, height: 1.5),
+    bodyLarge: TextStyle(
+      fontSize: 16,
+      height: 1.5,
+      fontWeight: FontWeight.w400,
+    ),
+    bodyMedium: TextStyle(
+      fontSize: 14,
+      height: 1.5,
+      fontWeight: FontWeight.w400,
+    ),
     bodySmall: TextStyle(
       fontSize: 12,
       height: 1.5,
+      fontWeight: FontWeight.w400,
       color: AppColors.textSecondary,
     ),
     labelLarge: TextStyle(
