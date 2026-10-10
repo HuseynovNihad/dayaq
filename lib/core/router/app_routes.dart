@@ -4,4 +4,5 @@ abstract final class AppRoutes {
   static const donations = '/donations';
   static const profile = '/profile';
   static const login = '/login';
+  static const map = '/map';
 }

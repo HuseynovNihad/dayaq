@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -6,19 +7,40 @@ import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/campaigns/presentation/pages/campaigns_page.dart';
 import '../../features/donations/presentation/pages/donations_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/map/presentation/pages/map_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/families/domain/entities/family_entity.dart';
+
 import '../widgets/app_button.dart';
 import '../widgets/app_empty_state.dart';
 import 'app_routes.dart';
 
-GoRouter createAppRouter({String initialLocation = AppRoutes.login}) {
+GoRouter createAppRouter({String? initialLocation}) {
+  final rootNavigatorKey = GlobalKey<NavigatorState>();
+
   return GoRouter(
-    initialLocation: initialLocation,
+    navigatorKey: rootNavigatorKey,
+    initialLocation: initialLocation ?? AppRoutes.login,
     routes: [
       GoRoute(
         path: AppRoutes.login,
         builder: (context, state) => const LoginPage(),
       ),
+
+      GoRoute(
+        path: AppRoutes.map,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) {
+          final families = state.extra;
+
+          return MapPage(
+            families: families is List<FamilyEntity>
+                ? families
+                : const <FamilyEntity>[],
+          );
+        },
+      ),
+
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return AppShell(navigationShell: navigationShell);
@@ -32,6 +54,7 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) {
               ),
             ],
           ),
+
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -40,6 +63,7 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) {
               ),
             ],
           ),
+
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -48,6 +72,7 @@ GoRouter createAppRouter({String initialLocation = AppRoutes.login}) {
               ),
             ],
           ),
+
           StatefulShellBranch(
             routes: [
               GoRoute(

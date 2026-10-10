@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../core/storage/token_storage.dart';
 import '../data/datasources/auth_remote_datasource.dart';
 import '../data/repositories/auth_repository_impl.dart';
 import '../domain/repositories/auth_repository.dart';
@@ -13,7 +14,10 @@ void registerAuthDependencies(GetIt sl) {
   );
 
   sl.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(remoteDataSource: sl<AuthRemoteDataSource>()),
+    () => AuthRepositoryImpl(
+      remoteDataSource: sl<AuthRemoteDataSource>(),
+      tokenStorage: sl<TokenStorage>(),
+    ),
   );
 
   sl.registerLazySingleton<LoginUseCase>(

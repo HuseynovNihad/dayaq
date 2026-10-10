@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../extensions/context_extensions.dart';
+
 class AppButton extends StatelessWidget {
   const AppButton({
     super.key,
@@ -9,6 +11,7 @@ class AppButton extends StatelessWidget {
     required this.onPressed,
     this.icon,
     this.svgIcon,
+    this.textStyle,
     this.isLoading = false,
     this.outlined = false,
     this.iconSize = 22,
@@ -18,14 +21,13 @@ class AppButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
 
-  /// Flutter Icon, Image.asset və digər widget-lər.
   final Widget? icon;
-
-  /// SVG asset faylının yolu.
   final String? svgIcon;
+  final TextStyle? textStyle;
 
   final bool isLoading;
   final bool outlined;
+
   final double iconSize;
   final double iconSpacing;
 
@@ -45,6 +47,10 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final buttonIcon = _buildIcon();
+
+    final defaultTextStyle = context.textTheme.labelLarge?.copyWith(
+      fontWeight: FontWeight.w600,
+    );
 
     final child = isLoading
         ? Semantics(
@@ -67,7 +73,13 @@ class AppButton extends StatelessWidget {
                 buttonIcon,
                 SizedBox(width: iconSpacing.w),
               ],
-              Flexible(child: Text(label, textAlign: TextAlign.center)),
+              Flexible(
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: defaultTextStyle?.merge(textStyle),
+                ),
+              ),
             ],
           );
 

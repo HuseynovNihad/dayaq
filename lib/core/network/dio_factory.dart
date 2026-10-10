@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 
 import '../config/app_config.dart';
+import '../storage/token_storage.dart';
+import 'auth_interceptor.dart';
 
-Dio createDio(AppConfig config) {
+Dio createDio(AppConfig config, {required TokenStorage tokenStorage}) {
   final dio = Dio(
     BaseOptions(
       baseUrl: config.hasApiUrl ? config.apiBaseUrl : '',
@@ -12,6 +14,7 @@ Dio createDio(AppConfig config) {
       headers: {'Accept': 'application/json'},
     ),
   );
+
   dio.interceptors.add(
     InterceptorsWrapper(
       onRequest: (options, handler) {
@@ -26,9 +29,13 @@ Dio createDio(AppConfig config) {
           );
           return;
         }
+
         handler.next(options);
       },
     ),
   );
+
+  dio.interceptors.add(AuthInterceptor(tokenStorage: tokenStorage));
+
   return dio;
 }
