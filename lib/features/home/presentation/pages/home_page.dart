@@ -70,7 +70,7 @@ class _HomeView extends StatelessWidget {
 
                         HomeAddFamilyButton(
                           onPressed: () {
-                            // TODO: Yeni ailə qeydiyyatı.
+                            context.go(AppRoutes.familyRegistration);
                           },
                         ),
 

@@ -1,6 +1,8 @@
 abstract final class AppValidators {
   static final RegExp _emailPattern = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
 
+  static final RegExp _phonePattern = RegExp(r'^\d{9}$');
+
   static String? requiredField(
     String? value, {
     String message = 'Bu sahəni doldurun.',
@@ -30,6 +32,20 @@ abstract final class AppValidators {
     // Şifrəni trim etmirik: boşluq onun bir hissəsi ola bilər.
     if (value == null || value.isEmpty) {
       return 'Şifrənizi daxil edin.';
+    }
+
+    return null;
+  }
+
+  static String? phone(String? value) {
+    final phone = value?.trim() ?? '';
+
+    if (phone.isEmpty) {
+      return 'Telefon nömrəsini daxil edin.';
+    }
+
+    if (!_phonePattern.hasMatch(phone)) {
+      return 'Telefon nömrəsi 9 rəqəmdən ibarət olmalıdır.';
     }
 
     return null;

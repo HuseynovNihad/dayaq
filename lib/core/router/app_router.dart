@@ -1,16 +1,15 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/app_shell.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
-import '../../features/campaigns/presentation/pages/campaigns_page.dart';
-import '../../features/donations/presentation/pages/donations_page.dart';
+import '../../features/families/domain/entities/family_entity.dart';
+import '../../features/families/presentation/pages/families_list_page.dart';
+import '../../features/families/presentation/pages/family_details_page.dart';
+import '../../features/families/presentation/pages/family_registration_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/map/presentation/pages/map_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
-import '../../features/families/domain/entities/family_entity.dart';
-
 import '../widgets/app_button.dart';
 import '../widgets/app_empty_state.dart';
 import 'app_routes.dart';
@@ -26,7 +25,29 @@ GoRouter createAppRouter({String? initialLocation}) {
         path: AppRoutes.login,
         builder: (context, state) => const LoginPage(),
       ),
+      GoRoute(
+        path: AppRoutes.familyRegistration,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const FamilyRegistrationPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.familyDetails,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) {
+          final family = state.extra;
 
+          if (family is! FamilyEntity) {
+            return Scaffold(
+              appBar: AppBar(title: const Text('Ailə Məlumatları')),
+              body: const Center(
+                child: Text('Ailə məlumatlarını açmaq mümkün olmadı.'),
+              ),
+            );
+          }
+
+          return FamilyDetailsPage(family: family);
+        },
+      ),
       GoRoute(
         path: AppRoutes.map,
         parentNavigatorKey: rootNavigatorKey,
@@ -40,7 +61,6 @@ GoRouter createAppRouter({String? initialLocation}) {
           );
         },
       ),
-
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return AppShell(navigationShell: navigationShell);
@@ -54,25 +74,14 @@ GoRouter createAppRouter({String? initialLocation}) {
               ),
             ],
           ),
-
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: AppRoutes.campaigns,
-                builder: (context, state) => const CampaignsPage(),
+                path: AppRoutes.families,
+                builder: (context, state) => const FamiliesListPage(),
               ),
             ],
           ),
-
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: AppRoutes.donations,
-                builder: (context, state) => const DonationsPage(),
-              ),
-            ],
-          ),
-
           StatefulShellBranch(
             routes: [
               GoRoute(

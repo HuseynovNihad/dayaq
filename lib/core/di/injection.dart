@@ -3,8 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../features/auth/di/auth_injection.dart';
-import '../../features/campaigns/di/campaigns_injection.dart';
-import '../../features/donations/di/donations_injection.dart';
+import '../../features/families/di/families_injection.dart';
 import '../../features/home/di/home_injection.dart';
 import '../../features/profile/di/profile_injection.dart';
 
@@ -19,9 +18,8 @@ void configureDependencies({AppConfig? config}) {
 
   // Feature Dependencies
   registerAuthDependencies(sl);
+  registerFamiliesDependencies(sl);
   registerHomeDependencies(sl);
-  registerCampaignsDependencies(sl);
-  registerDonationsDependencies(sl);
   registerProfileDependencies(sl);
 }
 

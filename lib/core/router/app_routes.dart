@@ -1,8 +1,11 @@
 abstract final class AppRoutes {
-  static const home = '/';
-  static const campaigns = '/campaigns';
-  static const donations = '/donations';
-  static const profile = '/profile';
-  static const login = '/login';
-  static const map = '/map';
+  static const String home = '/';
+  static const String families = '/families';
+  static const String familyDetails = '/family-details/:id';
+  static const String familyRegistration = '/family-registration';
+  static const String profile = '/profile';
+  static const String login = '/login';
+  static const String map = '/map';
+
+  static String familyDetailsPath(int id) => '/family-details/$id';
 }

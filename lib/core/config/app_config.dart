@@ -2,7 +2,7 @@ class AppConfig {
   const AppConfig({required this.apiBaseUrl});
 
   factory AppConfig.fromEnvironment() {
-    return const AppConfig(apiBaseUrl: 'https://konullu.dayaq.az/');
+    return const AppConfig(apiBaseUrl: 'https://dayaq.livementors.org');
   }
 
   final String apiBaseUrl;

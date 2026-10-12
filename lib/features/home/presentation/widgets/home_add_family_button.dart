@@ -5,9 +5,9 @@ import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/widgets/app_button.dart';
 
 class HomeAddFamilyButton extends StatelessWidget {
-  const HomeAddFamilyButton({super.key, this.onPressed});
+  const HomeAddFamilyButton({super.key, required this.onPressed});
 
-  final VoidCallback? onPressed;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class HomeAddFamilyButton extends StatelessWidget {
       textStyle: context.textTheme.titleMedium?.copyWith(
         fontWeight: FontWeight.w500,
       ),
-      onPressed: () {},
+      onPressed: onPressed,
     );
   }
 }

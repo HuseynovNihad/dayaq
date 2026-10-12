@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../extensions/context_extensions.dart';
@@ -8,6 +9,7 @@ class AppTextField extends StatelessWidget {
   const AppTextField({
     super.key,
     required this.label,
+    this.requiredField = false,
     this.hintText,
     this.controller,
     this.focusNode,
@@ -15,6 +17,10 @@ class AppTextField extends StatelessWidget {
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
     this.keyboardType,
     this.textInputAction,
+    this.textCapitalization = TextCapitalization.none,
+    this.inputFormatters,
+    this.maxLines = 1,
+    this.maxLength,
     this.obscureText = false,
     this.enabled = true,
     this.autocorrect = false,
@@ -28,6 +34,7 @@ class AppTextField extends StatelessWidget {
   });
 
   final String label;
+  final bool requiredField;
   final String? hintText;
 
   final TextEditingController? controller;
@@ -38,6 +45,11 @@ class AppTextField extends StatelessWidget {
 
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
+  final TextCapitalization textCapitalization;
+  final List<TextInputFormatter>? inputFormatters;
+
+  final int? maxLines;
+  final int? maxLength;
 
   final bool obscureText;
   final bool enabled;
@@ -63,8 +75,17 @@ class AppTextField extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: Text(
-                label,
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(text: label),
+                    if (requiredField)
+                      const TextSpan(
+                        text: ' *',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                  ],
+                ),
                 style: context.textTheme.titleSmall?.copyWith(
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w600,
@@ -72,7 +93,7 @@ class AppTextField extends StatelessWidget {
                 ),
               ),
             ),
-            if (labelTrailing != null) labelTrailing!,
+            ?labelTrailing,
           ],
         ),
 
@@ -82,25 +103,24 @@ class AppTextField extends StatelessWidget {
           controller: controller,
           focusNode: focusNode,
           enabled: enabled,
-
-          // Hər field-in müstəqil validasiyası
           validator: validator,
           autovalidateMode: autovalidateMode,
-
           keyboardType: keyboardType,
           textInputAction: textInputAction,
+          textCapitalization: textCapitalization,
+          inputFormatters: inputFormatters,
+          maxLines: obscureText ? 1 : maxLines,
+          maxLength: maxLength,
           obscureText: obscureText,
           onChanged: onChanged,
           onFieldSubmitted: onFieldSubmitted,
           autofillHints: autofillHints,
           autocorrect: autocorrect && !obscureText,
           enableSuggestions: enableSuggestions && !obscureText,
-
           style: context.textTheme.bodyLarge?.copyWith(
             fontSize: 14.sp,
             color: AppColors.textPrimary,
           ),
-
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: TextStyle(
@@ -108,38 +128,30 @@ class AppTextField extends StatelessWidget {
               color: const Color(0xFFD7C6B0),
               fontWeight: FontWeight.w400,
             ),
-
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,
-
             filled: true,
             fillColor: Colors.white,
-
             contentPadding: EdgeInsets.symmetric(
               horizontal: 18.w,
               vertical: 18.h,
             ),
-
             prefixIconConstraints: BoxConstraints(
               minWidth: 52.w,
               minHeight: 24.h,
             ),
-
             suffixIconConstraints: BoxConstraints(
               minWidth: 48.w,
               minHeight: 24.h,
             ),
-
             border: OutlineInputBorder(
               borderRadius: borderRadius,
               borderSide: const BorderSide(color: Color(0xFFF4F1ED)),
             ),
-
             enabledBorder: OutlineInputBorder(
               borderRadius: borderRadius,
               borderSide: const BorderSide(color: Color(0xFFF4F1ED), width: 1),
             ),
-
             focusedBorder: OutlineInputBorder(
               borderRadius: borderRadius,
               borderSide: const BorderSide(
@@ -147,17 +159,14 @@ class AppTextField extends StatelessWidget {
                 width: 1.5,
               ),
             ),
-
             errorBorder: OutlineInputBorder(
               borderRadius: borderRadius,
               borderSide: const BorderSide(color: Colors.red, width: 1),
             ),
-
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: borderRadius,
               borderSide: const BorderSide(color: Colors.red, width: 1.5),
             ),
-
             disabledBorder: OutlineInputBorder(
               borderRadius: borderRadius,
               borderSide: const BorderSide(color: Color(0xFFF4F1ED)),

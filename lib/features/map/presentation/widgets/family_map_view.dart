@@ -14,7 +14,13 @@ class FamilyMapView extends StatelessWidget {
   final List<FamilyEntity> families;
   final bool fitAllMarkers;
 
-  static const _baku = LatLng(40.4093, 49.8671);
+  static const String _appPackageName = 'az.dayaq.mobile';
+
+  static const String _mapTilerApiKey = String.fromEnvironment(
+    'MAPTILER_API_KEY',
+  );
+
+  static const LatLng _baku = LatLng(40.4093, 49.8671);
 
   static bool hasValidCoordinates(FamilyEntity family) {
     final lat = family.lat;
@@ -41,6 +47,33 @@ class FamilyMapView extends StatelessWidget {
 
     final initialCenter = coordinates.isNotEmpty ? coordinates.first : _baku;
 
+    final hasMapTilerKey = _mapTilerApiKey.trim().isNotEmpty;
+
+    if (!hasMapTilerKey) {
+      return Container(
+        width: double.infinity,
+        color: const Color(0xFFF3F1EA),
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(20),
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.map_outlined, size: 38, color: Colors.grey),
+            SizedBox(height: 10),
+            Text(
+              'Xəritə API açarı təyin edilməyib.',
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 6),
+            Text(
+              'MAPTILER_API_KEY konfiqurasiyasını yoxlayın.',
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
+
     return FlutterMap(
       options: MapOptions(
         initialCenter: initialCenter,
@@ -54,11 +87,16 @@ class FamilyMapView extends StatelessWidget {
             : null,
       ),
       children: [
+        // MapTiler xəritə görüntüləri
         TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'az.dayaq.mobile',
+          urlTemplate:
+              'https://api.maptiler.com/maps/streets-v4/256/'
+              '{z}/{x}/{y}.png?key=$_mapTilerApiKey',
+          userAgentPackageName: _appPackageName,
+          maxNativeZoom: 19,
         ),
 
+        // Qeydiyyatdan keçmiş ailələr
         MarkerLayer(
           markers: validFamilies.map((family) {
             return Marker(
@@ -74,8 +112,12 @@ class FamilyMapView extends StatelessWidget {
           }).toList(),
         ),
 
+        // Xəritə mənbələrinin göstərilməsi
         const RichAttributionWidget(
-          attributions: [TextSourceAttribution('OpenStreetMap contributors')],
+          attributions: [
+            TextSourceAttribution('MapTiler'),
+            TextSourceAttribution('OpenStreetMap contributors'),
+          ],
         ),
       ],
     );
