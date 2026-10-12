@@ -10,6 +10,10 @@ import '../../features/families/presentation/pages/family_registration_page.dart
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/map/presentation/pages/map_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/profile/presentation/pages/about_page.dart';
+import '../../features/profile/presentation/pages/term_conditions_page.dart';
+import '../../features/profile/presentation/pages/rules_page.dart';
+
 import '../widgets/app_button.dart';
 import '../widgets/app_empty_state.dart';
 import 'app_routes.dart';
@@ -60,6 +64,21 @@ GoRouter createAppRouter({String? initialLocation}) {
                 : const <FamilyEntity>[],
           );
         },
+      ),
+      GoRoute(
+        path: AppRoutes.about,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const AboutPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.termConditions,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const TermConditionsPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.rules,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const RulesPage(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
