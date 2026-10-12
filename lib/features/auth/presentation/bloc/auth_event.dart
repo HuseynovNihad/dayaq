@@ -19,3 +19,7 @@ final class AuthLoginSubmitted extends AuthEvent {
   @override
   List<Object?> get props => [email, password];
 }
+
+final class AuthLogoutRequested extends AuthEvent {
+  const AuthLogoutRequested();
+}

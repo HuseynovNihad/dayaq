@@ -1,33 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/storage/token_storage.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../widgets/profile_user_card.dart';
 import '../widgets/profile_settings_section.dart';
 import '../widgets/profile_logout_button.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({
-    super.key,
-    this.onAccountTap,
-    this.onSecurityTap,
-    this.onNotificationsTap,
-    this.onLogout,
-  });
-
-  final VoidCallback? onAccountTap;
-  final VoidCallback? onSecurityTap;
-  final VoidCallback? onNotificationsTap;
-  final VoidCallback? onLogout;
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  Widget build(BuildContext context) {
+    return BlocProvider<AuthBloc>(
+      create: (_) => sl<AuthBloc>(),
+      child: const _ProfileView(),
+    );
+  }
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfileView extends StatefulWidget {
+  const _ProfileView();
+
+  @override
+  State<_ProfileView> createState() => _ProfileViewState();
+}
+
+class _ProfileViewState extends State<_ProfileView> {
   String? _email;
 
   @override
@@ -54,30 +57,62 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  void _handleLogout(BuildContext context) {
+    context.read<AuthBloc>().add(const AuthLogoutRequested());
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: EdgeInsets.fromLTRB(20.w, 26.h, 20.w, 32.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ProfileUserCard(email: _email),
-              SizedBox(height: 26.h),
+    return BlocListener<AuthBloc, AuthState>(
+      listenWhen: (previous, current) =>
+          current is AuthLogoutSuccess || current is AuthLogoutFailure,
+      listener: (context, state) {
+        if (state is AuthLogoutSuccess) {
+          context.go(AppRoutes.login);
+        }
 
-              ProfileSettingsSection(
-                onAboutTap: () => context.push(AppRoutes.about),
-                onTermConditionsTap: () =>
-                    context.push(AppRoutes.termConditions),
-                onRulesTap: () => context.push(AppRoutes.rules),
-              ),
+        if (state is AuthLogoutFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.failure.message),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(20.w, 26.h, 20.w, 32.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ProfileUserCard(email: _email),
+                SizedBox(height: 26.h),
+                ProfileSettingsSection(
+                  onAboutTap: () => context.push(AppRoutes.about),
+                  onTermConditionsTap: () =>
+                      context.push(AppRoutes.termConditions),
+                  onRulesTap: () => context.push(AppRoutes.rules),
+                ),
+                SizedBox(height: 26.h),
+                BlocBuilder<AuthBloc, AuthState>(
+                  buildWhen: (previous, current) =>
+                      previous is AuthLogoutLoading ||
+                      current is AuthLogoutLoading,
+                  builder: (context, state) {
+                    final isLoading = state is AuthLogoutLoading;
 
-              SizedBox(height: 26.h),
-              ProfileLogoutButton(onLogout: widget.onLogout),
-            ],
+                    return ProfileLogoutButton(
+                      isLoading: isLoading,
+                      onLogout: isLoading ? null : () => _handleLogout(context),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

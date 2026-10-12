@@ -45,7 +45,8 @@ class AppAlertDialog extends StatelessWidget {
         iconBackground: const Color(0xFFFCEDEB),
         primaryLabel: onRetry == null ? 'Bağla' : 'Yenidən cəhd et',
         secondaryLabel: onRetry == null ? null : 'Bağla',
-        onPrimaryPressed: () => Navigator.of(dialogContext).pop(onRetry != null),
+        onPrimaryPressed: () =>
+            Navigator.of(dialogContext).pop(onRetry != null),
         onSecondaryPressed: () => Navigator.of(dialogContext).pop(false),
       ),
     );
@@ -70,9 +71,7 @@ class AppAlertDialog extends StatelessWidget {
         icon: isDestructive
             ? Icons.help_outline_rounded
             : Icons.info_outline_rounded,
-        iconColor: isDestructive
-            ? const Color(0xFFB36B30)
-            : AppColors.primary,
+        iconColor: isDestructive ? const Color(0xFFB36B30) : AppColors.primary,
         iconBackground: isDestructive
             ? const Color(0xFFFFF2E4)
             : const Color(0xFFFFF3D9),
@@ -101,13 +100,6 @@ class AppAlertDialog extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(24.r),
             border: Border.all(color: const Color(0xFFF0EDE8)),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x12000000),
-                blurRadius: 28,
-                offset: Offset(0, 10),
-              ),
-            ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,

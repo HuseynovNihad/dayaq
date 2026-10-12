@@ -11,10 +11,9 @@ import '../models/login_request_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
-    required AuthRemoteDataSource remoteDataSource,
-    required TokenStorage tokenStorage,
-  }) : _remoteDataSource = remoteDataSource,
-       _tokenStorage = tokenStorage;
+    required this._remoteDataSource,
+    required this._tokenStorage,
+  });
 
   final AuthRemoteDataSource _remoteDataSource;
   final TokenStorage _tokenStorage;
@@ -56,6 +55,43 @@ class AuthRepositoryImpl implements AuthRepository {
       return const Failure<LoginResponseEntity>(
         AppFailure(
           'Giriş məlumatları saxlanılarkən xəta baş verdi.',
+          kind: FailureKind.unknown,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Result<void>> logout() async {
+    try {
+      await _remoteDataSource.logout();
+
+      await _tokenStorage.deleteToken();
+      await _tokenStorage.deleteEmail();
+
+      return const Success<void>(null);
+    } on DioException catch (error) {
+      if (error.response?.statusCode == 401) {
+        try {
+          await _tokenStorage.deleteToken();
+          await _tokenStorage.deleteEmail();
+
+          return const Success<void>(null);
+        } catch (_) {
+          return const Failure<void>(
+            AppFailure(
+              'Sessiya məlumatlarını silmək mümkün olmadı.',
+              kind: FailureKind.unknown,
+            ),
+          );
+        }
+      }
+
+      return Failure<void>(mapDioFailure(error));
+    } catch (_) {
+      return const Failure<void>(
+        AppFailure(
+          'Sistemdən çıxış zamanı xəta baş verdi.',
           kind: FailureKind.unknown,
         ),
       );

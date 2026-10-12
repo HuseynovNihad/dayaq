@@ -6,6 +6,7 @@ import '../data/datasources/auth_remote_datasource.dart';
 import '../data/repositories/auth_repository_impl.dart';
 import '../domain/repositories/auth_repository.dart';
 import '../domain/usecases/login_usecase.dart';
+import '../domain/usecases/logout.dart';
 import '../presentation/bloc/auth_bloc.dart';
 
 void registerAuthDependencies(GetIt sl) {
@@ -24,7 +25,11 @@ void registerAuthDependencies(GetIt sl) {
     () => LoginUseCase(repository: sl<AuthRepository>()),
   );
 
+  sl.registerLazySingleton<Logout>(
+    () => Logout(repository: sl<AuthRepository>()),
+  );
+
   sl.registerFactory<AuthBloc>(
-    () => AuthBloc(loginUseCase: sl<LoginUseCase>()),
+    () => AuthBloc(loginUseCase: sl<LoginUseCase>(), logout: sl<Logout>()),
   );
 }

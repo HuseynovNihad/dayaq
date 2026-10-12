@@ -35,3 +35,20 @@ final class AuthLoginFailure extends AuthState {
   @override
   List<Object?> get props => [failure];
 }
+
+final class AuthLogoutLoading extends AuthState {
+  const AuthLogoutLoading();
+}
+
+final class AuthLogoutSuccess extends AuthState {
+  const AuthLogoutSuccess();
+}
+
+final class AuthLogoutFailure extends AuthState {
+  const AuthLogoutFailure({required this.failure});
+
+  final AppFailure failure;
+
+  @override
+  List<Object?> get props => [failure];
+}
