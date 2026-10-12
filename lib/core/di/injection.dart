@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import '../../features/auth/di/auth_injection.dart';
 import '../../features/families/di/families_injection.dart';
 import '../../features/home/di/home_injection.dart';
+import '../../features/notifications/di/notifications_injection.dart';
 import '../../features/profile/di/profile_injection.dart';
 
 import '../config/app_config.dart';
@@ -21,6 +22,7 @@ void configureDependencies({AppConfig? config}) {
   registerFamiliesDependencies(sl);
   registerHomeDependencies(sl);
   registerProfileDependencies(sl);
+  registerNotificationsDependencies(sl);
 }
 
 void _registerCoreDependencies(AppConfig? config) {

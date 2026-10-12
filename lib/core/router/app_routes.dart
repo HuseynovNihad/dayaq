@@ -10,6 +10,7 @@ abstract final class AppRoutes {
   static const String about = '/about';
   static const String termConditions = '/term-conditions';
   static const String rules = '/rules';
+  static const String notifications = '/notifications';
 
   static String familyDetailsPath(int id) => '/family-details/$id';
 }

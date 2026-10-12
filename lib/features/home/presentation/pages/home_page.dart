@@ -60,7 +60,10 @@ class _HomeView extends StatelessWidget {
                     ),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
-                        const HomeHeader(),
+                        HomeHeader(
+                          onNotificationTap: () =>
+                              context.push(AppRoutes.notifications),
+                        ),
 
                         SizedBox(height: 24.h),
 

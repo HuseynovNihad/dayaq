@@ -115,13 +115,14 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
         actions: [
           IconButton(
             tooltip: 'Bildirişlər',
-            onPressed: null,
+            onPressed: () => context.push(AppRoutes.notifications),
             icon: Icon(
               Icons.notifications_none_rounded,
               size: 26.r,
               color: const Color(0xFF574D3E),
             ),
           ),
+
           SizedBox(width: 12.w),
         ],
       ),

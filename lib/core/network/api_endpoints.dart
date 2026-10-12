@@ -14,4 +14,6 @@ abstract final class ApiEndpoints {
   static const String about = '/api/about';
   static const String termCondition = '/api/term-condition';
   static const String rule = '/api/rule';
+
+  static const String notifications = '/api/notifications';
 }

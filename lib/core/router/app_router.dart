@@ -9,6 +9,7 @@ import '../../features/families/presentation/pages/family_details_page.dart';
 import '../../features/families/presentation/pages/family_registration_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/map/presentation/pages/map_page.dart';
+import '../../features/notifications/presentation/pages/notifications_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/profile/presentation/pages/about_page.dart';
 import '../../features/profile/presentation/pages/term_conditions_page.dart';
@@ -79,6 +80,11 @@ GoRouter createAppRouter({String? initialLocation}) {
         path: AppRoutes.rules,
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => const RulesPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.notifications,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const NotificationsPage(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
