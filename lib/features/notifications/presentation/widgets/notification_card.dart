@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -12,18 +11,20 @@ class NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(16.r),
+      padding: EdgeInsets.all(isTablet ? 22 : 16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18.r),
+        borderRadius: BorderRadius.circular(isTablet ? 20 : 18),
         border: Border.all(color: const Color(0xFFEAEAEA)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.025),
-            blurRadius: 10.r,
-            offset: Offset(0, 3.h),
+            blurRadius: isTablet ? 14 : 10,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -31,19 +32,20 @@ class NotificationCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 48.r,
-            height: 48.r,
+            width: isTablet ? 58 : 48,
+            height: isTablet ? 58 : 48,
+            alignment: Alignment.center,
             decoration: BoxDecoration(
               color: const Color(0xFFFFF2D6),
-              borderRadius: BorderRadius.circular(14.r),
+              borderRadius: BorderRadius.circular(isTablet ? 16 : 14),
             ),
             child: Icon(
               Icons.notifications_none_rounded,
               color: const Color(0xFFE49A00),
-              size: 25.r,
+              size: isTablet ? 30 : 25,
             ),
           ),
-          SizedBox(width: 13.w),
+          SizedBox(width: isTablet ? 18 : 13),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,15 +53,17 @@ class NotificationCard extends StatelessWidget {
                 Text(
                   notification.title,
                   style: context.textTheme.titleSmall?.copyWith(
+                    fontSize: isTablet ? 19 : null,
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 if (notification.description.trim().isNotEmpty) ...[
-                  SizedBox(height: 7.h),
+                  SizedBox(height: isTablet ? 10 : 7),
                   Text(
                     notification.description,
                     style: context.textTheme.bodyMedium?.copyWith(
+                      fontSize: isTablet ? 16 : null,
                       color: AppColors.textSecondary,
                       height: 1.5,
                     ),

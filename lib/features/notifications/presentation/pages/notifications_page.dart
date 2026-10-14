@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/di/injection.dart';
@@ -47,14 +46,19 @@ class _NotificationsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+    final horizontalPadding = isTablet ? 28.0 : 20.0;
+
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
       appBar: AppBar(
+        toolbarHeight: isTablet ? 72 : 56,
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
+          tooltip: 'Geri qayıt',
           onPressed: () {
             if (context.canPop()) {
               context.pop();
@@ -64,14 +68,14 @@ class _NotificationsView extends StatelessWidget {
           },
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
-            size: 20.r,
+            size: isTablet ? 24 : 20,
             color: AppColors.textPrimary,
           ),
         ),
-
         title: Text(
           'Bildirişlər',
           style: context.textTheme.titleLarge?.copyWith(
+            fontSize: isTablet ? 24 : null,
             color: AppColors.textPrimary,
             fontWeight: FontWeight.w700,
           ),
@@ -123,17 +127,29 @@ class _NotificationsView extends StatelessWidget {
                     )
                   else
                     SliverPadding(
-                      padding: EdgeInsets.fromLTRB(20.w, 22.h, 20.w, 28.h),
-                      sliver: SliverList.builder(
-                        itemCount: state.notifications.length,
-                        itemBuilder: (context, index) {
-                          final notification = state.notifications[index];
-
-                          return Padding(
-                            padding: EdgeInsets.only(bottom: 12.h),
-                            child: NotificationCard(notification: notification),
-                          );
-                        },
+                      padding: EdgeInsets.symmetric(
+                        horizontal: horizontalPadding,
+                        vertical: isTablet ? 28 : 22,
+                      ),
+                      sliver: SliverToBoxAdapter(
+                        child: Center(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 850),
+                            child: Column(
+                              children: [
+                                for (final notification in state.notifications)
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      bottom: isTablet ? 16 : 12,
+                                    ),
+                                    child: NotificationCard(
+                                      notification: notification,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                 ],
@@ -156,58 +172,67 @@ class _NotificationsError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+
     return Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 28.w),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 70.r,
-              height: 70.r,
-              decoration: const BoxDecoration(
-                color: Color(0xFFFFEEEE),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.notifications_off_outlined,
-                size: 32.r,
-                color: const Color(0xFFD94B4B),
-              ),
-            ),
-            SizedBox(height: 18.h),
-            Text(
-              'Bildirişləri yükləmək mümkün olmadı',
-              textAlign: TextAlign.center,
-              style: context.textTheme.titleMedium?.copyWith(
-                color: AppColors.textPrimary,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: AppColors.textSecondary,
-                height: 1.5,
-              ),
-            ),
-            SizedBox(height: 20.h),
-            ElevatedButton.icon(
-              onPressed: onRetry,
-              icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Yenidən cəhd et'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.black,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 480),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: isTablet ? 32 : 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: isTablet ? 88 : 70,
+                height: isTablet ? 88 : 70,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFFFEEEE),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.notifications_off_outlined,
+                  size: isTablet ? 42 : 32,
+                  color: const Color(0xFFD94B4B),
                 ),
               ),
-            ),
-          ],
+              SizedBox(height: isTablet ? 22 : 18),
+              Text(
+                'Bildirişləri yükləmək mümkün olmadı',
+                textAlign: TextAlign.center,
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontSize: isTablet ? 21 : null,
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  fontSize: isTablet ? 16 : null,
+                  color: AppColors.textSecondary,
+                  height: 1.5,
+                ),
+              ),
+              SizedBox(height: isTablet ? 24 : 20),
+              ElevatedButton.icon(
+                onPressed: onRetry,
+                icon: Icon(Icons.refresh_rounded, size: isTablet ? 22 : 20),
+                label: const Text('Yenidən cəhd et'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.black,
+                  elevation: 0,
+                  minimumSize: Size(0, isTablet ? 54 : 46),
+                  textStyle: TextStyle(fontSize: isTablet ? 16 : 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
