@@ -1,8 +1,8 @@
+import '../registration_responsive.dart';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/extensions/context_extensions.dart';
@@ -16,7 +16,7 @@ class FamilyLocalDocument {
     required this.name,
     required this.path,
     required this.sizeBytes,
-    this.isImage = false, 
+    this.isImage = false,
   });
 
   final String id;
@@ -348,20 +348,23 @@ class _SocialWorkerNotesFormState extends State<SocialWorkerNotesForm> {
 
   Widget _actionButton(String label, IconData icon, VoidCallback? onPressed) {
     return SizedBox(
-      height: 54.h,
+      height: context.registrationIsTablet ? 60 : 54.regH(context),
       child: OutlinedButton.icon(
         onPressed: onPressed,
-        icon: Icon(icon, size: 19.r),
+        icon: Icon(icon, size: 19.regR(context)),
         label: Text(
           label,
-          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            fontSize: 13.regSp(context),
+            fontWeight: FontWeight.w600,
+          ),
         ),
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.textPrimary,
           backgroundColor: const Color(0xFFF2F2F2),
           side: const BorderSide(color: Color(0xFFCFC9C7)),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14.r),
+            borderRadius: BorderRadius.circular(14.regR(context)),
           ),
         ),
       ),
@@ -369,29 +372,29 @@ class _SocialWorkerNotesFormState extends State<SocialWorkerNotesForm> {
   }
 
   Widget _documentCard(FamilyLocalDocument doc) => Container(
-    margin: EdgeInsets.only(bottom: 12.h),
-    padding: EdgeInsets.all(12.r),
+    margin: EdgeInsets.only(bottom: 12.regH(context)),
+    padding: EdgeInsets.all(12.regR(context)),
     decoration: BoxDecoration(
       color: Colors.white,
       border: Border.all(color: const Color(0xFFE2E0DF)),
-      borderRadius: BorderRadius.circular(15.r),
+      borderRadius: BorderRadius.circular(15.regR(context)),
     ),
     child: Row(
       children: [
         Container(
-          height: 46.r,
-          width: 46.r,
+          height: 46.regR(context),
+          width: 46.regR(context),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: const Color(0xFFFFE9EA),
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(12.regR(context)),
           ),
           child: const Icon(
             Icons.picture_as_pdf_rounded,
             color: Color(0xFFE02027),
           ),
         ),
-        SizedBox(width: 10.w),
+        SizedBox(width: 10.regW(context)),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -404,7 +407,7 @@ class _SocialWorkerNotesFormState extends State<SocialWorkerNotesForm> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              SizedBox(height: 4.h),
+              SizedBox(height: 4.regH(context)),
               Text(
                 doc.name,
                 maxLines: 1,
@@ -413,7 +416,7 @@ class _SocialWorkerNotesFormState extends State<SocialWorkerNotesForm> {
                   color: AppColors.textSecondary,
                 ),
               ),
-              SizedBox(height: 4.h),
+              SizedBox(height: 4.regH(context)),
               Text(
                 '${_displaySize(doc.sizeBytes)} • PDF hazırdır (göndərilməyib)',
                 style: context.textTheme.bodySmall?.copyWith(
@@ -448,7 +451,7 @@ class _SocialWorkerNotesFormState extends State<SocialWorkerNotesForm> {
               child: Text(
                 'Sosial işçinin qeydləri',
                 style: context.textTheme.titleSmall?.copyWith(
-                  fontSize: 15.sp,
+                  fontSize: 15.regSp(context),
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -461,7 +464,7 @@ class _SocialWorkerNotesFormState extends State<SocialWorkerNotesForm> {
             ),
           ],
         ),
-        SizedBox(height: 12.h),
+        SizedBox(height: 12.regH(context)),
         TextField(
           controller: widget.notesController,
           minLines: 4,
@@ -472,31 +475,31 @@ class _SocialWorkerNotesFormState extends State<SocialWorkerNotesForm> {
                 'Ailənin yaşayış şəraiti, ehtiyacları və sosial vəziyyəti haqqında qeydlərinizi yazın...',
             filled: true,
             fillColor: Colors.white,
-            contentPadding: EdgeInsets.all(16.r),
+            contentPadding: EdgeInsets.all(16.regR(context)),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(18.r),
+              borderRadius: BorderRadius.circular(18.regR(context)),
               borderSide: const BorderSide(color: Color(0xFFD8D3D0)),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(18.r),
+              borderRadius: BorderRadius.circular(18.regR(context)),
               borderSide: const BorderSide(
                 color: AppColors.primary,
                 width: 1.5,
               ),
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(18.r),
+              borderRadius: BorderRadius.circular(18.regR(context)),
             ),
           ),
         ),
-        SizedBox(height: 30.h),
+        SizedBox(height: 30.regH(context)),
         Row(
           children: [
             Expanded(
               child: Text(
                 'Əlavə edilmiş sənədlər (${widget.documents.length})',
                 style: context.textTheme.titleSmall?.copyWith(
-                  fontSize: 15.sp,
+                  fontSize: 15.regSp(context),
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -510,7 +513,7 @@ class _SocialWorkerNotesFormState extends State<SocialWorkerNotesForm> {
             ),
           ],
         ),
-        SizedBox(height: 16.h),
+        SizedBox(height: 16.regH(context)),
         Row(
           children: [
             Expanded(
@@ -520,7 +523,7 @@ class _SocialWorkerNotesFormState extends State<SocialWorkerNotesForm> {
                 _busy ? null : _takePicture,
               ),
             ),
-            SizedBox(width: 10.w),
+            SizedBox(width: 10.regW(context)),
             Expanded(
               child: _actionButton(
                 'Qalereya',
@@ -530,7 +533,7 @@ class _SocialWorkerNotesFormState extends State<SocialWorkerNotesForm> {
             ),
           ],
         ),
-        SizedBox(height: 10.h),
+        SizedBox(height: 10.regH(context)),
         SizedBox(
           width: double.infinity,
           child: _actionButton(
@@ -539,12 +542,15 @@ class _SocialWorkerNotesFormState extends State<SocialWorkerNotesForm> {
             _busy ? null : _pickFiles,
           ),
         ),
-        SizedBox(height: 12.h),
+        SizedBox(height: 12.regH(context)),
         Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 22.h),
+          padding: EdgeInsets.symmetric(
+            horizontal: 16.regW(context),
+            vertical: 22.regH(context),
+          ),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(17.r),
+            borderRadius: BorderRadius.circular(17.regR(context)),
             color: const Color(0xFFF7F7F7),
             border: Border.all(
               color: const Color(0xFFC9C2C0),
@@ -556,9 +562,9 @@ class _SocialWorkerNotesFormState extends State<SocialWorkerNotesForm> {
               Icon(
                 Icons.cloud_upload_rounded,
                 color: const Color(0xFF737373),
-                size: 34.r,
+                size: 34.regR(context),
               ),
-              SizedBox(height: 8.h),
+              SizedBox(height: 8.regH(context)),
               Text(
                 'Şəkillər avtomatik PDF-ə çevriləcək',
                 textAlign: TextAlign.center,
@@ -566,7 +572,7 @@ class _SocialWorkerNotesFormState extends State<SocialWorkerNotesForm> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              SizedBox(height: 5.h),
+              SizedBox(height: 5.regH(context)),
               Text(
                 'Bir neçə şəkil = bir çoxsəhifəli PDF',
                 textAlign: TextAlign.center,
@@ -578,14 +584,14 @@ class _SocialWorkerNotesFormState extends State<SocialWorkerNotesForm> {
           ),
         ),
         if (_busy) ...[
-          SizedBox(height: 14.h),
+          SizedBox(height: 14.regH(context)),
           const Center(
             child: CircularProgressIndicator(color: AppColors.primary),
           ),
         ],
-        SizedBox(height: 18.h),
+        SizedBox(height: 18.regH(context)),
         ...widget.documents.map(_documentCard),
-        SizedBox(height: 16.h),
+        SizedBox(height: 16.regH(context)),
       ],
     );
   }

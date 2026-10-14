@@ -1,6 +1,6 @@
+import '../registration_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/di/injection.dart';
@@ -574,7 +574,9 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
               title: Text(
                 'Yeni Ailə Qeydiyyatı',
                 style: TextStyle(
-                  fontSize: 18.sp,
+                  fontSize: context.registrationIsTablet
+                      ? 22
+                      : 18.regSp(context),
                   fontWeight: FontWeight.w700,
                   color: const Color(0xFF242424),
                 ),
@@ -588,94 +590,130 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
                     child: ListView(
                       key: ValueKey(_currentStep),
                       padding: EdgeInsets.symmetric(
-                        horizontal: 18.w,
-                        vertical: 16.h,
+                        horizontal: context.registrationIsTablet
+                            ? 32
+                            : 18.regW(context),
+                        vertical: 16.regH(context),
                       ),
                       keyboardDismissBehavior:
                           ScrollViewKeyboardDismissBehavior.onDrag,
                       children: [
-                        RegistrationStepHeader(
-                          currentStep: _currentStep,
-                          onCancel: _isSubmitting ? () {} : _cancelRegistration,
+                        Center(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 920),
+                            child: RegistrationStepHeader(
+                              currentStep: _currentStep,
+                              onCancel: _isSubmitting
+                                  ? () {}
+                                  : _cancelRegistration,
+                            ),
+                          ),
                         ),
-                        SizedBox(height: 20.h),
-                        _buildCurrentForm(),
+                        SizedBox(height: 20.regH(context)),
+                        Center(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 920),
+                            child: _buildCurrentForm(),
+                          ),
+                        ),
                       ],
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 12.h),
+                    padding: EdgeInsets.fromLTRB(
+                      16.regW(context),
+                      12.regH(context),
+                      16.regW(context),
+                      12.regH(context),
+                    ),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       border: Border(top: BorderSide(color: Color(0xFFEEEEEE))),
                     ),
-                    child: Row(
-                      children: [
-                        // Geri düyməsi
-                        SizedBox(
-                          height: 50.h,
-                          child: OutlinedButton.icon(
-                            onPressed: !_isSubmitting && _currentStep > 1
-                                ? _previousStep
-                                : null,
-                            icon: const Icon(Icons.arrow_back_rounded),
-                            label: const Text('Geri'),
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 10.w),
-                        // Davam et düyməsi
-                        Expanded(
-                          child: SizedBox(
-                            height: 50.h,
-                            child: ElevatedButton(
-                              onPressed: _isSubmitting ? null : _nextStep,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFF4B033),
-                                foregroundColor: const Color(0xFF332414),
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.r),
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 920),
+                        child: Row(
+                          children: [
+                            // Geri düyməsi
+                            SizedBox(
+                              height: context.registrationIsTablet
+                                  ? 56
+                                  : 50.regH(context),
+                              child: OutlinedButton.icon(
+                                onPressed: !_isSubmitting && _currentStep > 1
+                                    ? _previousStep
+                                    : null,
+                                icon: const Icon(Icons.arrow_back_rounded),
+                                label: const Text('Geri'),
+                                style: OutlinedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      12.regR(context),
+                                    ),
+                                  ),
                                 ),
                               ),
-                              child: _isSubmitting
-                                  ? SizedBox(
-                                      height: 22.r,
-                                      width: 22.r,
-                                      child: const CircularProgressIndicator(
-                                        strokeWidth: 2.5,
-                                        color: Color(0xFF332414),
-                                      ),
-                                    )
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          _currentStep == 7
-                                              ? 'Ailəni qeydiyyata al'
-                                              : 'Davam et',
-                                          style: TextStyle(
-                                            fontSize: 15.sp,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        SizedBox(width: 8.w),
-                                        Icon(
-                                          _currentStep == 7
-                                              ? Icons.check_rounded
-                                              : Icons.arrow_forward_rounded,
-                                        ),
-                                      ],
-                                    ),
                             ),
-                          ),
+                            SizedBox(width: 10.regW(context)),
+                            // Davam et düyməsi
+                            Expanded(
+                              child: SizedBox(
+                                height: context.registrationIsTablet
+                                    ? 56
+                                    : 50.regH(context),
+                                child: ElevatedButton(
+                                  onPressed: _isSubmitting ? null : _nextStep,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFF4B033),
+                                    foregroundColor: const Color(0xFF332414),
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        12.regR(context),
+                                      ),
+                                    ),
+                                  ),
+                                  child: _isSubmitting
+                                      ? SizedBox(
+                                          height: 22.regR(context),
+                                          width: 22.regR(context),
+                                          child:
+                                              const CircularProgressIndicator(
+                                                strokeWidth: 2.5,
+                                                color: Color(0xFF332414),
+                                              ),
+                                        )
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              _currentStep == 7
+                                                  ? 'Ailəni qeydiyyata al'
+                                                  : 'Davam et',
+                                              style: TextStyle(
+                                                fontSize:
+                                                    context.registrationIsTablet
+                                                    ? 18
+                                                    : 15.regSp(context),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            SizedBox(width: 8.regW(context)),
+                                            Icon(
+                                              _currentStep == 7
+                                                  ? Icons.check_rounded
+                                                  : Icons.arrow_forward_rounded,
+                                            ),
+                                          ],
+                                        ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ],

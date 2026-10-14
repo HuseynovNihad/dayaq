@@ -1,6 +1,6 @@
+import '../registration_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -106,19 +106,27 @@ class _ExpenseInformationFormState extends State<ExpenseInformationForm> {
   InputDecoration _decoration() => InputDecoration(
     hintText: '0',
     suffixText: 'AZN',
-    suffixStyle: TextStyle(fontSize: 13.sp, color: AppColors.textSecondary),
+    suffixStyle: TextStyle(
+      fontSize: 13.regSp(context),
+      color: AppColors.textSecondary,
+    ),
     filled: true,
     fillColor: Colors.white,
-    contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+    contentPadding: EdgeInsets.symmetric(
+      horizontal: 12.regW(context),
+      vertical: 12.regH(context),
+    ),
     enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12.r),
+      borderRadius: BorderRadius.circular(12.regR(context)),
       borderSide: const BorderSide(color: Color(0xFFDED8D5)),
     ),
     focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12.r),
+      borderRadius: BorderRadius.circular(12.regR(context)),
       borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
     ),
-    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.r)),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12.regR(context)),
+    ),
   );
 
   Widget _summary() {
@@ -135,15 +143,18 @@ class _ExpenseInformationFormState extends State<ExpenseInformationForm> {
           Text(
             label,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 11.sp, color: AppColors.textSecondary),
+            style: TextStyle(
+              fontSize: 11.regSp(context),
+              color: AppColors.textSecondary,
+            ),
           ),
-          SizedBox(height: 6.h),
+          SizedBox(height: 6.regH(context)),
           FittedBox(
             fit: BoxFit.scaleDown,
             child: Text(
               value,
               style: TextStyle(
-                fontSize: 17.sp,
+                fontSize: context.registrationIsTablet ? 22 : 17.regSp(context),
                 fontWeight: FontWeight.w800,
                 color: color,
               ),
@@ -154,10 +165,10 @@ class _ExpenseInformationFormState extends State<ExpenseInformationForm> {
     );
 
     return Container(
-      padding: EdgeInsets.all(16.r),
+      padding: EdgeInsets.all(16.regR(context)),
       decoration: BoxDecoration(
         color: const Color(0xFFF2F2F2),
-        borderRadius: BorderRadius.circular(19.r),
+        borderRadius: BorderRadius.circular(19.regR(context)),
         border: Border.all(color: const Color(0xFFE5E5E5)),
       ),
       child: Column(
@@ -165,9 +176,17 @@ class _ExpenseInformationFormState extends State<ExpenseInformationForm> {
           Row(
             children: [
               metric('Ümumi gəlir', '$income AZN', AppColors.textPrimary),
-              Container(width: 1, height: 48.h, color: const Color(0xFFDADADA)),
+              Container(
+                width: 1,
+                height: 48.regH(context),
+                color: const Color(0xFFDADADA),
+              ),
               metric('Ümumi xərc', '$expense AZN', const Color(0xFFD9232B)),
-              Container(width: 1, height: 48.h, color: const Color(0xFFDADADA)),
+              Container(
+                width: 1,
+                height: 48.regH(context),
+                color: const Color(0xFFDADADA),
+              ),
               metric(
                 'Qalıq fərq',
                 _differenceLabel(difference),
@@ -177,12 +196,12 @@ class _ExpenseInformationFormState extends State<ExpenseInformationForm> {
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 16.regH(context)),
           ClipRRect(
-            borderRadius: BorderRadius.circular(20.r),
+            borderRadius: BorderRadius.circular(20.regR(context)),
             child: LinearProgressIndicator(
               value: ratio,
-              minHeight: 10.h,
+              minHeight: 10.regH(context),
               backgroundColor: const Color(0xFFE1E1E1),
               valueColor: const AlwaysStoppedAnimation(Color(0xFFD9232B)),
             ),
@@ -193,11 +212,11 @@ class _ExpenseInformationFormState extends State<ExpenseInformationForm> {
   }
 
   Widget _largeExpense(int index, String title, String subtitle) => Container(
-    margin: EdgeInsets.only(bottom: 12.h),
-    padding: EdgeInsets.all(14.r),
+    margin: EdgeInsets.only(bottom: 12.regH(context)),
+    padding: EdgeInsets.all(14.regR(context)),
     decoration: BoxDecoration(
       color: Colors.white,
-      borderRadius: BorderRadius.circular(17.r),
+      borderRadius: BorderRadius.circular(17.regR(context)),
       border: Border.all(color: const Color(0xFFDDD7D4)),
     ),
     child: Column(
@@ -209,14 +228,14 @@ class _ExpenseInformationFormState extends State<ExpenseInformationForm> {
             fontWeight: FontWeight.w700,
           ),
         ),
-        SizedBox(height: 3.h),
+        SizedBox(height: 3.regH(context)),
         Text(
           subtitle,
           style: context.textTheme.bodySmall?.copyWith(
             color: AppColors.textSecondary,
           ),
         ),
-        SizedBox(height: 10.h),
+        SizedBox(height: 10.regH(context)),
         TextField(
           controller: widget.controllers[index],
           keyboardType: TextInputType.number,
@@ -229,14 +248,14 @@ class _ExpenseInformationFormState extends State<ExpenseInformationForm> {
 
   Widget _utility(int index, IconData icon, Color color, String label) =>
       Padding(
-        padding: EdgeInsets.symmetric(vertical: 7.h),
+        padding: EdgeInsets.symmetric(vertical: 7.regH(context)),
         child: Row(
           children: [
-            Icon(icon, size: 20.r, color: color),
-            SizedBox(width: 10.w),
+            Icon(icon, size: 20.regR(context), color: color),
+            SizedBox(width: 10.regW(context)),
             Expanded(child: Text(label, style: context.textTheme.bodyMedium)),
             SizedBox(
-              width: 118.w,
+              width: context.registrationIsTablet ? 160 : 118.regW(context),
               child: TextField(
                 controller: widget.controllers[index],
                 textAlign: TextAlign.end,
@@ -255,11 +274,11 @@ class _ExpenseInformationFormState extends State<ExpenseInformationForm> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _summary(),
-        SizedBox(height: 25.h),
+        SizedBox(height: 25.regH(context)),
         Row(
           children: [
             const Icon(Icons.receipt_long_rounded, color: Color(0xFFD9232B)),
-            SizedBox(width: 9.w),
+            SizedBox(width: 9.regW(context)),
             Expanded(
               child: Text(
                 'Aylıq məişət və sosial xərclər',
@@ -270,15 +289,34 @@ class _ExpenseInformationFormState extends State<ExpenseInformationForm> {
             ),
           ],
         ),
-        SizedBox(height: 16.h),
-        _largeExpense(1, 'Kirayə xərci', 'Aylıq ev kirayəsi'),
-        _largeExpense(0, 'Təhsil xərcləri', 'Məktəb ləvazimatı / hazırlıq'),
-        SizedBox(height: 8.h),
+        SizedBox(height: 16.regH(context)),
+        if (context.registrationIsTablet)
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: _largeExpense(1, 'Kirayə xərci', 'Aylıq ev kirayəsi'),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _largeExpense(
+                  0,
+                  'Təhsil xərcləri',
+                  'Məktəb ləvazimatı / hazırlıq',
+                ),
+              ),
+            ],
+          )
+        else ...[
+          _largeExpense(1, 'Kirayə xərci', 'Aylıq ev kirayəsi'),
+          _largeExpense(0, 'Təhsil xərcləri', 'Məktəb ləvazimatı / hazırlıq'),
+        ],
+        SizedBox(height: 8.regH(context)),
         Container(
-          padding: EdgeInsets.all(16.r),
+          padding: EdgeInsets.all(16.regR(context)),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(18.r),
+            borderRadius: BorderRadius.circular(18.regR(context)),
             border: Border.all(color: const Color(0xFFE2E2E2)),
           ),
           child: Column(
@@ -287,12 +325,12 @@ class _ExpenseInformationFormState extends State<ExpenseInformationForm> {
               Text(
                 'KOMMUNAL XƏRCLƏR',
                 style: TextStyle(
-                  fontSize: 13.sp,
+                  fontSize: 13.regSp(context),
                   fontWeight: FontWeight.w700,
                   color: AppColors.textSecondary,
                 ),
               ),
-              SizedBox(height: 8.h),
+              SizedBox(height: 8.regH(context)),
               _utility(2, Icons.bolt_rounded, Colors.orange, 'Elektrik xərci'),
               const Divider(height: 8),
               _utility(3, Icons.water_drop_rounded, Colors.blue, 'Su xərci'),
@@ -320,7 +358,7 @@ class _ExpenseInformationFormState extends State<ExpenseInformationForm> {
             ],
           ),
         ),
-        SizedBox(height: 18.h),
+        SizedBox(height: 18.regH(context)),
       ],
     );
   }

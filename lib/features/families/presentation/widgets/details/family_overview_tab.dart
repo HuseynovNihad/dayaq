@@ -108,6 +108,7 @@ class FamilyOverviewTab extends StatelessWidget {
                           ? '${lat.toStringAsFixed(5)}, ${lng.toStringAsFixed(5)}'
                           : 'GPS koordinatları mövcud deyil',
                       style: context.textTheme.bodySmall?.copyWith(
+            fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 15 : null,
                         color: const Color(0xFF777777),
                       ),
                     ),

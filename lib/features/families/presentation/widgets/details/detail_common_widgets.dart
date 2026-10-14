@@ -10,7 +10,7 @@ class DetailCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(16.r),
+      padding: EdgeInsets.all(MediaQuery.sizeOf(context).shortestSide >= 600 ? 22 : 16.r),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18.r),
@@ -36,6 +36,7 @@ class DetailSectionTitle extends StatelessWidget {
     return Text(
       title,
       style: context.textTheme.labelMedium?.copyWith(
+        fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 14 : null,
         fontWeight: FontWeight.w700,
         letterSpacing: 0.5,
         color: const Color(0xFF737373),
@@ -65,6 +66,7 @@ class DetailInfoRow extends StatelessWidget {
                 child: Text(
                   label,
                   style: context.textTheme.bodySmall?.copyWith(
+                    fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 15 : null,
                     color: const Color(0xFF777777),
                   ),
                 ),
@@ -75,6 +77,7 @@ class DetailInfoRow extends StatelessWidget {
                   value,
                   textAlign: TextAlign.right,
                   style: context.textTheme.labelMedium?.copyWith(
+                    fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 16 : null,
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.w700,
                   ),
@@ -111,6 +114,7 @@ class DetailEmptySection extends StatelessWidget {
             message,
             textAlign: TextAlign.center,
             style: context.textTheme.bodyMedium?.copyWith(
+              fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 16 : null,
               color: const Color(0xFF777777),
             ),
           ),

@@ -65,6 +65,7 @@ class FamilyFinanceTab extends StatelessWidget {
                     child: Text(
                       'Gəlir-Xərc nisbəti',
                       style: context.textTheme.titleSmall?.copyWith(
+            fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 20 : null,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -95,6 +96,7 @@ class FamilyFinanceTab extends StatelessWidget {
                     child: Text(
                       'Xərclər: ${_money(expenses)}',
                       style: context.textTheme.bodySmall?.copyWith(
+            fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 15 : null,
                         color: const Color(0xFF777777),
                       ),
                     ),
@@ -104,6 +106,7 @@ class FamilyFinanceTab extends StatelessWidget {
                       'Qalıq: ${_money(remaining)}',
                       textAlign: TextAlign.right,
                       style: context.textTheme.bodySmall?.copyWith(
+            fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 15 : null,
                         color: const Color(0xFF777777),
                       ),
                     ),
@@ -173,8 +176,11 @@ class _FinanceSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 82.h,
-      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 10.h),
+      constraints: BoxConstraints(minHeight: MediaQuery.sizeOf(context).shortestSide >= 600 ? 112 : 82.h),
+      padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.sizeOf(context).shortestSide >= 600 ? 12 : 5.w,
+          vertical: MediaQuery.sizeOf(context).shortestSide >= 600 ? 16 : 10.h,
+        ),
       decoration: BoxDecoration(
         color: highlighted ? const Color(0xFFFFF3D5) : const Color(0xFFF2F2F2),
         borderRadius: BorderRadius.circular(16.r),
@@ -201,6 +207,7 @@ class _FinanceSummary extends StatelessWidget {
             child: Text(
               amount,
               style: context.textTheme.titleSmall?.copyWith(
+            fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 20 : null,
                 fontWeight: FontWeight.w800,
                 color: amountColor,
               ),
@@ -239,6 +246,7 @@ class _ExpenseRow extends StatelessWidget {
                 child: Text(
                   label,
                   style: context.textTheme.bodySmall?.copyWith(
+            fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 15 : null,
                     color: const Color(0xFF747474),
                   ),
                 ),

@@ -17,6 +17,7 @@ class FamilyMembersTab extends StatelessWidget {
         Text(
           'Qeydiyyatda olan ailə üzvləri',
           style: context.textTheme.titleSmall?.copyWith(
+            fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 20 : null,
             color: AppColors.textPrimary,
             fontWeight: FontWeight.w700,
           ),
@@ -86,6 +87,7 @@ class _MemberCard extends StatelessWidget {
                 child: Text(
                   _initials,
                   style: context.textTheme.titleSmall?.copyWith(
+            fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 20 : null,
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.w700,
                   ),
@@ -99,6 +101,7 @@ class _MemberCard extends StatelessWidget {
                     Text(
                       member.name,
                       style: context.textTheme.titleSmall?.copyWith(
+            fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 20 : null,
                         fontWeight: FontWeight.w700,
                         color: AppColors.textPrimary,
                       ),
@@ -131,6 +134,7 @@ class _MemberCard extends StatelessWidget {
                     birthdayText,
                     textAlign: TextAlign.right,
                     style: context.textTheme.bodySmall?.copyWith(
+            fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 15 : null,
                       color: const Color(0xFF777777),
                     ),
                   ),
@@ -183,6 +187,7 @@ class _MemberInfo extends StatelessWidget {
           child: Text(
             value,
             style: context.textTheme.bodyMedium?.copyWith(
+            fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 16 : null,
               color: AppColors.textPrimary,
             ),
           ),

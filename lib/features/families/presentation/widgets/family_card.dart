@@ -49,10 +49,15 @@ class FamilyCard extends StatelessWidget {
         background: const Color(0xFFFFE8BD),
         foreground: const Color(0xFF80602B),
       ),
-      'approved' || 'təsdiqlənib' => (
-        label: 'Təsdiqlənib',
-        background: const Color(0xFFE8E8E8),
-        foreground: const Color(0xFF363636),
+      'uyğunluq təsdiqləndi' || 'approved' || 'təsdiqlənib' => (
+        label: status == 'uyğunluq təsdiqləndi' ? family.status.trim() : 'Təsdiqlənib',
+        background: const Color(0xFFE1F5E8),
+        foreground: const Color(0xFF217A43),
+      ),
+      'uyğunluq təsdiqlənmədi' => (
+        label: family.status.trim(),
+        background: const Color(0xFFFDE8E7),
+        foreground: const Color(0xFFB42318),
       ),
       'registered' || 'qeydə alınıb' => (
         label: 'Qeydə alınıb',
@@ -70,21 +75,22 @@ class FamilyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.textTheme;
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
     final status = _statusStyle;
     final registerNumber = family.registerNumber.trim();
     final region = family.region.trim();
 
     return Material(
       color: Colors.white,
-      borderRadius: BorderRadius.circular(18.r),
+      borderRadius: BorderRadius.circular(isTablet ? 20 : 18.r),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(18.r),
+        borderRadius: BorderRadius.circular(isTablet ? 20 : 18.r),
         child: Container(
           width: double.infinity,
-          padding: EdgeInsets.all(16.r),
+          padding: EdgeInsets.all(isTablet ? 20 : 16.r),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18.r),
+            borderRadius: BorderRadius.circular(isTablet ? 20 : 18.r),
             border: Border.all(color: const Color(0xFFF1EFEC)),
             boxShadow: [
               BoxShadow(
@@ -101,8 +107,8 @@ class FamilyCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    width: 52.r,
-                    height: 52.r,
+                    width: isTablet ? 62 : 52.r,
+                    height: isTablet ? 62 : 52.r,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: _avatarColor,
@@ -111,6 +117,7 @@ class FamilyCard extends StatelessWidget {
                     child: Text(
                       _initials,
                       style: textTheme.titleLarge?.copyWith(
+                        fontSize: isTablet ? 23 : null,
                         fontWeight: FontWeight.w700,
                         color: const Color(0xFF2C2115),
                       ),
@@ -126,6 +133,7 @@ class FamilyCard extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: textTheme.titleMedium?.copyWith(
+                            fontSize: isTablet ? 19 : null,
                             fontWeight: FontWeight.w700,
                             color: AppColors.textPrimary,
                           ),
@@ -137,6 +145,7 @@ class FamilyCard extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: textTheme.bodySmall?.copyWith(
+                              fontSize: isTablet ? 14 : null,
                               color: const Color(0xFF897C6D),
                             ),
                           ),
@@ -147,7 +156,7 @@ class FamilyCard extends StatelessWidget {
                   SizedBox(width: 8.w),
                   Icon(
                     Icons.chevron_right_rounded,
-                    size: 22.r,
+                    size: isTablet ? 26 : 22.r,
                     color: const Color(0xFF8B7C69),
                   ),
                 ],
@@ -168,6 +177,7 @@ class FamilyCard extends StatelessWidget {
                     child: Text(
                       status.label,
                       style: textTheme.bodySmall?.copyWith(
+                        fontSize: isTablet ? 14 : null,
                         color: status.foreground,
                         fontWeight: FontWeight.w600,
                       ),
@@ -192,7 +202,7 @@ class FamilyCard extends StatelessWidget {
                       if (region.isNotEmpty) ...[
                         Icon(
                           Icons.location_on_outlined,
-                          size: 18.r,
+                          size: isTablet ? 21 : 18.r,
                           color: const Color(0xFF897C6D),
                         ),
                         SizedBox(width: 4.w),
@@ -202,6 +212,7 @@ class FamilyCard extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: textTheme.bodySmall?.copyWith(
+                              fontSize: isTablet ? 14 : null,
                               color: const Color(0xFF62584D),
                             ),
                           ),
@@ -211,7 +222,7 @@ class FamilyCard extends StatelessWidget {
                         if (region.isNotEmpty) SizedBox(width: 10.w),
                         Icon(
                           Icons.calendar_today_outlined,
-                          size: 16.r,
+                          size: isTablet ? 19 : 16.r,
                           color: const Color(0xFF897C6D),
                         ),
                         SizedBox(width: 6.w),

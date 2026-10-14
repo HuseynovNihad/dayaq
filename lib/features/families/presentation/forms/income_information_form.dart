@@ -1,6 +1,6 @@
+import '../registration_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -132,19 +132,22 @@ class _IncomeInformationFormState extends State<IncomeInformationForm> {
   }
 
   InputDecoration _inputDecoration() {
-    final radius = BorderRadius.circular(13.r);
+    final radius = BorderRadius.circular(13.regR(context));
 
     return InputDecoration(
       hintText: '0',
       suffixText: 'AZN',
       suffixStyle: TextStyle(
-        fontSize: 13.sp,
+        fontSize: 13.regSp(context),
         color: AppColors.textSecondary,
         fontWeight: FontWeight.w600,
       ),
       filled: true,
       fillColor: Colors.white,
-      contentPadding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 14.h),
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: 13.regW(context),
+        vertical: 14.regH(context),
+      ),
       enabledBorder: OutlineInputBorder(
         borderRadius: radius,
         borderSide: const BorderSide(color: Color(0xFFE0DCDA)),
@@ -159,10 +162,10 @@ class _IncomeInformationFormState extends State<IncomeInformationForm> {
 
   Widget _incomeRow(int index) {
     return Container(
-      padding: EdgeInsets.all(14.r),
+      padding: EdgeInsets.all(14.regR(context)),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(17.r),
+        borderRadius: BorderRadius.circular(17.regR(context)),
         border: Border.all(color: const Color(0xFFE0DCDA)),
       ),
       child: Column(
@@ -176,7 +179,7 @@ class _IncomeInformationFormState extends State<IncomeInformationForm> {
             ),
           ),
 
-          SizedBox(height: 4.h),
+          SizedBox(height: 4.regH(context)),
 
           Text(
             _subtitles[index],
@@ -185,7 +188,7 @@ class _IncomeInformationFormState extends State<IncomeInformationForm> {
             ),
           ),
 
-          SizedBox(height: 12.h),
+          SizedBox(height: 12.regH(context)),
 
           TextField(
             controller: widget.controllers[index],
@@ -201,10 +204,10 @@ class _IncomeInformationFormState extends State<IncomeInformationForm> {
 
   Widget _compactIncomeField(int index) {
     return Container(
-      padding: EdgeInsets.all(12.r),
+      padding: EdgeInsets.all(12.regR(context)),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(17.r),
+        borderRadius: BorderRadius.circular(17.regR(context)),
         border: Border.all(color: const Color(0xFFE0DCDA)),
       ),
       child: Column(
@@ -220,7 +223,7 @@ class _IncomeInformationFormState extends State<IncomeInformationForm> {
             ),
           ),
 
-          SizedBox(height: 10.h),
+          SizedBox(height: 10.regH(context)),
 
           TextField(
             controller: widget.controllers[index],
@@ -237,12 +240,12 @@ class _IncomeInformationFormState extends State<IncomeInformationForm> {
   Widget _buildTotalCard() {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(20.r),
+      padding: EdgeInsets.all(20.regR(context)),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFFFFE8BC), Color(0xFFFFF4DE)],
         ),
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(20.regR(context)),
         border: Border.all(color: AppColors.primary),
       ),
       child: Row(
@@ -259,7 +262,7 @@ class _IncomeInformationFormState extends State<IncomeInformationForm> {
                   ),
                 ),
 
-                SizedBox(height: 6.h),
+                SizedBox(height: 6.regH(context)),
 
                 Text.rich(
                   TextSpan(
@@ -268,7 +271,9 @@ class _IncomeInformationFormState extends State<IncomeInformationForm> {
                         text: _formatMoney(_total),
                         style: TextStyle(
                           color: AppColors.textPrimary,
-                          fontSize: 29.sp,
+                          fontSize: context.registrationIsTablet
+                              ? 36
+                              : 29.regSp(context),
                           fontWeight: FontWeight.w800,
                         ),
                       ),
@@ -276,7 +281,7 @@ class _IncomeInformationFormState extends State<IncomeInformationForm> {
                         text: ' AZN',
                         style: TextStyle(
                           color: AppColors.textSecondary,
-                          fontSize: 15.sp,
+                          fontSize: 15.regSp(context),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -287,18 +292,18 @@ class _IncomeInformationFormState extends State<IncomeInformationForm> {
             ),
           ),
 
-          SizedBox(width: 12.w),
+          SizedBox(width: 12.regW(context)),
 
           Container(
-            width: 54.r,
-            height: 54.r,
+            width: 54.regR(context),
+            height: 54.regR(context),
             decoration: BoxDecoration(
               color: AppColors.primary,
-              borderRadius: BorderRadius.circular(15.r),
+              borderRadius: BorderRadius.circular(15.regR(context)),
             ),
             child: Icon(
               Icons.account_balance_wallet_rounded,
-              size: 27.r,
+              size: 27.regR(context),
               color: Colors.black,
             ),
           ),
@@ -313,10 +318,10 @@ class _IncomeInformationFormState extends State<IncomeInformationForm> {
         Icon(
           Icons.monetization_on_rounded,
           color: AppColors.primary,
-          size: 23.r,
+          size: 23.regR(context),
         ),
 
-        SizedBox(width: 8.w),
+        SizedBox(width: 8.regW(context)),
 
         Expanded(
           child: Text(
@@ -338,33 +343,48 @@ class _IncomeInformationFormState extends State<IncomeInformationForm> {
       children: [
         _buildTotalCard(),
 
-        SizedBox(height: 26.h),
+        SizedBox(height: 26.regH(context)),
 
         _buildSectionHeader(),
 
-        SizedBox(height: 16.h),
+        SizedBox(height: 16.regH(context)),
 
-        // İlk 5 gəlir mənbəyi.
-        for (var i = 0; i < 5; i++) ...[_incomeRow(i), SizedBox(height: 12.h)],
-
-        // Fərdi yardım (individual_assistance).
-        _incomeRow(6),
-
-        SizedBox(height: 12.h),
-
-        // Xeyriyyə yardımı və təhsil üzrə gəlir.
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: _compactIncomeField(5)),
-
-            SizedBox(width: 12.w),
-
-            Expanded(child: _compactIncomeField(7)),
+        // On tablets, use two balanced columns; keep phone layout unchanged.
+        if (context.registrationIsTablet)
+          for (final pair in const <List<int>>[
+            [0, 1],
+            [2, 3],
+            [4, 6],
+            [5, 7],
+          ]) ...[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: _incomeRow(pair[0])),
+                const SizedBox(width: 16),
+                Expanded(child: _incomeRow(pair[1])),
+              ],
+            ),
+            const SizedBox(height: 14),
+          ]
+        else ...[
+          for (var i = 0; i < 5; i++) ...[
+            _incomeRow(i),
+            SizedBox(height: 12.regH(context)),
           ],
-        ),
+          _incomeRow(6),
+          SizedBox(height: 12.regH(context)),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: _compactIncomeField(5)),
+              SizedBox(width: 12.regW(context)),
+              Expanded(child: _compactIncomeField(7)),
+            ],
+          ),
+        ],
 
-        SizedBox(height: 18.h),
+        SizedBox(height: 18.regH(context)),
       ],
     );
   }

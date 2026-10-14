@@ -1,6 +1,6 @@
+import '../registration_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -179,7 +179,7 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
                   color: AppColors.textPrimary,
                 ),
               ),
-              SizedBox(height: 4.h),
+              SizedBox(height: 4.regH(context)),
               Text(
                 'Qeydiyyata alınan üzv sayı: '
                 '${widget.members.length} nəfər (istəyə bağlı)',
@@ -190,7 +190,7 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
             ],
           ),
         ),
-        SizedBox(width: 10.w),
+        SizedBox(width: 10.regW(context)),
         FilledButton.icon(
           onPressed: _addMember,
           icon: const Icon(Icons.add_rounded, size: 18),
@@ -199,7 +199,10 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
             backgroundColor: const Color(0xFFFFDEA2),
             foregroundColor: Colors.black,
             elevation: 0,
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 11.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: 12.regW(context),
+              vertical: 11.regH(context),
+            ),
           ),
         ),
       ],
@@ -217,28 +220,28 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
             Text(
               'Doğum tarixi',
               style: context.textTheme.titleSmall?.copyWith(
-                fontSize: 14.sp,
+                fontSize: context.registrationIsTablet ? 16 : 14.regSp(context),
                 fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 10.regH(context)),
             InkWell(
               onTap: () => _selectBirthday(member),
-              borderRadius: BorderRadius.circular(15.r),
+              borderRadius: BorderRadius.circular(15.regR(context)),
               child: InputDecorator(
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
                   contentPadding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 16.h,
+                    horizontal: 12.regW(context),
+                    vertical: 16.regH(context),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.r),
+                    borderRadius: BorderRadius.circular(15.regR(context)),
                     borderSide: const BorderSide(color: Color(0xFFDED8D5)),
                   ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.r),
+                    borderRadius: BorderRadius.circular(15.regR(context)),
                   ),
                 ),
                 child: Row(
@@ -249,7 +252,7 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
                             ? 'Tarix seçin'
                             : _formatDate(member.birthday),
                         style: TextStyle(
-                          fontSize: 13.sp,
+                          fontSize: 13.regSp(context),
                           color: member.birthday == null
                               ? AppColors.textSecondary
                               : AppColors.textPrimary,
@@ -258,7 +261,7 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
                     ),
                     Icon(
                       Icons.calendar_today_outlined,
-                      size: 17.r,
+                      size: 17.regR(context),
                       color: AppColors.textSecondary,
                     ),
                   ],
@@ -274,10 +277,12 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
   Widget _buildExpandedMember(FamilyMemberDraft member, int index) {
     return Container(
       key: ValueKey('expanded_${member.id}'),
-      padding: EdgeInsets.all(16.r),
+      padding: EdgeInsets.all(
+        context.registrationIsTablet ? 22 : 16.regR(context),
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(20.regR(context)),
         border: Border.all(color: AppColors.primary, width: 2),
       ),
       child: Column(
@@ -286,7 +291,7 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
           Row(
             children: [
               CircleAvatar(
-                radius: 18.r,
+                radius: 18.regR(context),
                 backgroundColor: Colors.black,
                 child: Text(
                   '${index + 1}',
@@ -296,7 +301,7 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
                   ),
                 ),
               ),
-              SizedBox(width: 10.w),
+              SizedBox(width: 10.regW(context)),
               Expanded(
                 child: Text(
                   'Ailə üzvü ${index + 1}',
@@ -314,7 +319,7 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
             ],
           ),
 
-          Divider(height: 26.h),
+          Divider(height: 26.regH(context)),
 
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -327,7 +332,7 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
                   textCapitalization: TextCapitalization.words,
                 ),
               ),
-              SizedBox(width: 10.w),
+              SizedBox(width: 10.regW(context)),
               Expanded(
                 child: AppTextField(
                   label: 'Soyad',
@@ -339,7 +344,7 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
             ],
           ),
 
-          SizedBox(height: 18.h),
+          SizedBox(height: 18.regH(context)),
 
           AppDropdownField<int>(
             key: ValueKey('relation_${member.id}'),
@@ -361,13 +366,13 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
             },
           ),
 
-          SizedBox(height: 18.h),
+          SizedBox(height: 18.regH(context)),
 
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(child: _buildDateField(member)),
-              SizedBox(width: 10.w),
+              SizedBox(width: 10.regW(context)),
               Expanded(
                 child: AppTextField(
                   label: 'Aylıq fərdi gəlir',
@@ -387,16 +392,16 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
   Widget _buildCollapsedMember(FamilyMemberDraft member, int index) {
     return Container(
       key: ValueKey('collapsed_${member.id}'),
-      padding: EdgeInsets.all(14.r),
+      padding: EdgeInsets.all(14.regR(context)),
       decoration: BoxDecoration(
         color: const Color(0xFFF1F1F1),
-        borderRadius: BorderRadius.circular(18.r),
+        borderRadius: BorderRadius.circular(18.regR(context)),
         border: Border.all(color: const Color(0xFFE1E1E1)),
       ),
       child: Row(
         children: [
           CircleAvatar(
-            radius: 21.r,
+            radius: 21.regR(context),
             backgroundColor: const Color(0xFFE4E4E4),
             child: Text(
               '${index + 1}',
@@ -406,7 +411,7 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
               ),
             ),
           ),
-          SizedBox(width: 12.w),
+          SizedBox(width: 12.regW(context)),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -422,7 +427,7 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                SizedBox(height: 4.h),
+                SizedBox(height: 4.regH(context)),
                 Text(
                   '${_relationLabel(member.relationId)}'
                   ' • ${_formatDate(member.birthday).isEmpty ? "Tarix yoxdur" : _formatDate(member.birthday)}'
@@ -463,14 +468,14 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSectionHeader(),
-          SizedBox(height: 18.h),
+          SizedBox(height: 18.regH(context)),
           if (widget.members.isEmpty) ...[
             Container(
               width: double.infinity,
-              padding: EdgeInsets.all(18.r),
+              padding: EdgeInsets.all(18.regR(context)),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16.r),
+                borderRadius: BorderRadius.circular(16.regR(context)),
                 border: Border.all(color: const Color(0xFFF0ECE7)),
               ),
               child: Text(
@@ -481,7 +486,7 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
                 ),
               ),
             ),
-            SizedBox(height: 14.h),
+            SizedBox(height: 14.regH(context)),
           ],
 
           for (var index = 0; index < widget.members.length; index++) ...[
@@ -490,20 +495,20 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
             else
               _buildCollapsedMember(widget.members[index], index),
 
-            SizedBox(height: 12.h),
+            SizedBox(height: 12.regH(context)),
           ],
 
-          SizedBox(height: 10.h),
+          SizedBox(height: 10.regH(context)),
 
           InkWell(
             onTap: _addMember,
-            borderRadius: BorderRadius.circular(18.r),
+            borderRadius: BorderRadius.circular(18.regR(context)),
             child: Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 20.h),
+              padding: EdgeInsets.symmetric(vertical: 20.regH(context)),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(18.r),
+                borderRadius: BorderRadius.circular(18.regR(context)),
                 border: Border.all(
                   color: const Color(0xFFC7C0BD),
                   width: 1.5,
@@ -517,7 +522,7 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
                     Icons.add_circle_rounded,
                     color: AppColors.primary,
                   ),
-                  SizedBox(width: 8.w),
+                  SizedBox(width: 8.regW(context)),
                   Text(
                     'Növbəti ailə üzvünü əlavə et',
                     style: context.textTheme.bodyMedium?.copyWith(
@@ -529,7 +534,7 @@ class FamilyMembersFormState extends State<FamilyMembersForm> {
             ),
           ),
 
-          SizedBox(height: 16.h),
+          SizedBox(height: 16.regH(context)),
         ],
       ),
     );

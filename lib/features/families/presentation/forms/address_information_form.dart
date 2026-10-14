@@ -1,6 +1,6 @@
+import '../registration_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -139,11 +139,13 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
   Widget _buildEmptyLocationCard() {
     return Container(
       width: double.infinity,
-      constraints: BoxConstraints(minHeight: 220.h),
-      padding: EdgeInsets.all(20.r),
+      constraints: BoxConstraints(
+        minHeight: context.registrationIsTablet ? 300 : 220.regH(context),
+      ),
+      padding: EdgeInsets.all(20.regR(context)),
       decoration: BoxDecoration(
         color: const Color(0xFFF3F1EA),
-        borderRadius: BorderRadius.circular(18.r),
+        borderRadius: BorderRadius.circular(18.regR(context)),
         border: Border.all(color: const Color(0xFFF4F1ED)),
       ),
       child: Column(
@@ -151,18 +153,18 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
         children: [
           if (_isLoading)
             SizedBox(
-              width: 32.r,
-              height: 32.r,
+              width: 32.regR(context),
+              height: 32.regR(context),
               child: const CircularProgressIndicator(color: AppColors.primary),
             )
           else
             Icon(
               Icons.location_off_outlined,
-              size: 38.r,
+              size: 38.regR(context),
               color: AppColors.textSecondary,
             ),
 
-          SizedBox(height: 12.h),
+          SizedBox(height: 12.regH(context)),
 
           Text(
             _isLoading
@@ -175,7 +177,7 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
           ),
 
           if (!_isLoading) ...[
-            SizedBox(height: 16.h),
+            SizedBox(height: 16.regH(context)),
 
             FilledButton.icon(
               onPressed: _getCurrentLocation,
@@ -188,7 +190,7 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
             ),
 
             if (_locationError != null) ...[
-              SizedBox(height: 8.h),
+              SizedBox(height: 8.regH(context)),
               TextButton(
                 onPressed: _openLocationSettings,
                 child: const Text('Məkan ayarlarını aç'),
@@ -216,9 +218,9 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
     final hasMapTilerKey = _mapTilerApiKey.trim().isNotEmpty;
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(18.r),
+      borderRadius: BorderRadius.circular(18.regR(context)),
       child: SizedBox(
-        height: 270.h,
+        height: context.registrationIsTablet ? 340 : 270.regH(context),
         child: Stack(
           children: [
             Positioned.fill(
@@ -249,11 +251,11 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
                             markers: [
                               Marker(
                                 point: currentPoint,
-                                width: 54.r,
-                                height: 54.r,
+                                width: 54.regR(context),
+                                height: 54.regR(context),
                                 child: Icon(
                                   Icons.location_pin,
-                                  size: 48.r,
+                                  size: 48.regR(context),
                                   color: AppColors.primary,
                                   shadows: const [
                                     Shadow(
@@ -271,22 +273,22 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
                   : Container(
                       color: const Color(0xFFF3F1EA),
                       alignment: Alignment.center,
-                      padding: EdgeInsets.all(20.r),
+                      padding: EdgeInsets.all(20.regR(context)),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
                             Icons.map_outlined,
-                            size: 38.r,
+                            size: 38.regR(context),
                             color: AppColors.textSecondary,
                           ),
-                          SizedBox(height: 10.h),
+                          SizedBox(height: 10.regH(context)),
                           Text(
                             'Xəritə API açarı təyin edilməyib.',
                             textAlign: TextAlign.center,
                             style: context.textTheme.bodyMedium,
                           ),
-                          SizedBox(height: 6.h),
+                          SizedBox(height: 6.regH(context)),
                           Text(
                             'Tətbiqi MAPTILER_API_KEY ilə başladın.',
                             textAlign: TextAlign.center,
@@ -302,18 +304,21 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
             // Xəritə məlumat mənbəyi
             if (hasMapTilerKey)
               Positioned(
-                top: 8.h,
-                right: 8.w,
+                top: 8.regH(context),
+                right: 8.regW(context),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.regW(context),
+                    vertical: 5.regH(context),
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.93),
-                    borderRadius: BorderRadius.circular(8.r),
+                    borderRadius: BorderRadius.circular(8.regR(context)),
                   ),
                   child: Text(
                     '© MapTiler © OpenStreetMap contributors',
                     style: TextStyle(
-                      fontSize: 9.sp,
+                      fontSize: 9.regSp(context),
                       color: AppColors.textPrimary,
                     ),
                   ),
@@ -322,18 +327,18 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
 
             // GPS koordinatları
             Positioned(
-              left: 12.w,
-              right: 12.w,
-              bottom: 12.h,
+              left: 12.regW(context),
+              right: 12.regW(context),
+              bottom: 12.regH(context),
               child: Container(
-                padding: EdgeInsets.all(12.r),
+                padding: EdgeInsets.all(12.regR(context)),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(14.r),
+                  borderRadius: BorderRadius.circular(14.regR(context)),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.08),
-                      blurRadius: 12.r,
+                      blurRadius: 12.regR(context),
                     ),
                   ],
                 ),
@@ -351,7 +356,7 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
                             ),
                           ),
 
-                          SizedBox(height: 4.h),
+                          SizedBox(height: 4.regH(context)),
 
                           Text(
                             '${position.latitude.toStringAsFixed(6)}, '
@@ -361,7 +366,7 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
                             ),
                           ),
 
-                          SizedBox(height: 3.h),
+                          SizedBox(height: 3.regH(context)),
 
                           Text(
                             'Dəqiqlik: təxminən '
@@ -374,15 +379,15 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
                       ),
                     ),
 
-                    SizedBox(width: 8.w),
+                    SizedBox(width: 8.regW(context)),
 
                     IconButton.filledTonal(
                       tooltip: 'Koordinatları yenilə',
                       onPressed: _isLoading ? null : _getCurrentLocation,
                       icon: _isLoading
                           ? SizedBox(
-                              width: 18.r,
-                              height: 18.r,
+                              width: 18.regR(context),
+                              height: 18.regR(context),
                               child: const CircularProgressIndicator(
                                 strokeWidth: 2,
                               ),
@@ -410,30 +415,30 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
           // Ünvan məlumatları kartı
           Container(
             width: double.infinity,
-            padding: EdgeInsets.all(16.r),
+            padding: EdgeInsets.all(16.regR(context)),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(18.r),
+              borderRadius: BorderRadius.circular(18.regR(context)),
               border: Border.all(color: const Color(0xFFF4F1ED)),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 48.r,
-                  height: 48.r,
+                  width: 48.regR(context),
+                  height: 48.regR(context),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFF0D1),
-                    borderRadius: BorderRadius.circular(14.r),
+                    borderRadius: BorderRadius.circular(14.regR(context)),
                   ),
                   child: Icon(
                     Icons.map_outlined,
                     color: AppColors.primary,
-                    size: 27.r,
+                    size: 27.regR(context),
                   ),
                 ),
 
-                SizedBox(width: 12.w),
+                SizedBox(width: 12.regW(context)),
 
                 Expanded(
                   child: Column(
@@ -447,7 +452,7 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
                         ),
                       ),
 
-                      SizedBox(height: 5.h),
+                      SizedBox(height: 5.regH(context)),
 
                       Text(
                         'Ailənin yaşayış ünvanını daxil edin. '
@@ -464,7 +469,7 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
             ),
           ),
 
-          SizedBox(height: 22.h),
+          SizedBox(height: 22.regH(context)),
 
           // Backend: region_id (1 = Bakı, 2 = Sumqayıt)
           AppDropdownField<int>(
@@ -480,7 +485,7 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
             validator: (value) => value == null ? 'Rayon / şəhər seçin.' : null,
           ),
 
-          SizedBox(height: 20.h),
+          SizedBox(height: 20.regH(context)),
 
           // Dəqiq yaşayış ünvanı
           AppTextField(
@@ -494,7 +499,7 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
             validator: AppValidators.requiredField,
           ),
 
-          SizedBox(height: 22.h),
+          SizedBox(height: 22.regH(context)),
 
           // GPS başlığı
           Row(
@@ -511,7 +516,7 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
                     ],
                   ),
                   style: context.textTheme.titleSmall?.copyWith(
-                    fontSize: 15.sp,
+                    fontSize: 15.regSp(context),
                     fontWeight: FontWeight.w600,
                     color: AppColors.textPrimary,
                   ),
@@ -520,16 +525,16 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
 
               Icon(
                 Icons.my_location_rounded,
-                size: 15.r,
+                size: 15.regR(context),
                 color: const Color(0xFF173CBD),
               ),
 
-              SizedBox(width: 5.w),
+              SizedBox(width: 5.regW(context)),
 
               Text(
                 'Avtomatik GPS',
                 style: TextStyle(
-                  fontSize: 12.sp,
+                  fontSize: 12.regSp(context),
                   color: const Color(0xFF173CBD),
                   fontWeight: FontWeight.w600,
                 ),
@@ -537,22 +542,22 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
             ],
           ),
 
-          SizedBox(height: 12.h),
+          SizedBox(height: 12.regH(context)),
 
           _buildLocationCard(),
 
-          SizedBox(height: 12.h),
+          SizedBox(height: 12.regH(context)),
 
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(
                 Icons.info_outline_rounded,
-                size: 17.r,
+                size: 17.regR(context),
                 color: const Color(0xFF173CBD),
               ),
 
-              SizedBox(width: 7.w),
+              SizedBox(width: 7.regW(context)),
 
               Expanded(
                 child: Text(
@@ -568,16 +573,19 @@ class _AddressInformationFormState extends State<AddressInformationForm> {
           ),
 
           if (widget.position != null && widget.position!.accuracy > 100) ...[
-            SizedBox(height: 10.h),
+            SizedBox(height: 10.regH(context)),
 
             Text(
               'GPS dəqiqliyi aşağıdır. Daha açıq ərazidə '
               'koordinatları yeniləmək tövsiyə olunur.',
-              style: TextStyle(fontSize: 12.sp, color: const Color(0xFFB36B00)),
+              style: TextStyle(
+                fontSize: 12.regSp(context),
+                color: const Color(0xFFB36B00),
+              ),
             ),
           ],
 
-          SizedBox(height: 16.h),
+          SizedBox(height: 16.regH(context)),
         ],
       ),
     );

@@ -41,6 +41,7 @@ class FamilyDocumentsTab extends StatelessWidget {
         Text(
           'Əlavə edilmiş sənədlər',
           style: context.textTheme.titleSmall?.copyWith(
+            fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 20 : null,
             fontWeight: FontWeight.w700,
             color: AppColors.textPrimary,
           ),
@@ -114,6 +115,7 @@ class FamilyDocumentsTab extends StatelessWidget {
               child: Text(
                 'Sosial işçinin qeydləri',
                 style: context.textTheme.titleSmall?.copyWith(
+            fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 20 : null,
                   fontWeight: FontWeight.w700,
                   color: AppColors.textPrimary,
                 ),
@@ -122,6 +124,7 @@ class FamilyDocumentsTab extends StatelessWidget {
             Text(
               '${details.notes.length} qeyd',
               style: context.textTheme.bodySmall?.copyWith(
+            fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 15 : null,
                 color: const Color(0xFF777777),
               ),
             ),
@@ -148,6 +151,7 @@ class FamilyDocumentsTab extends StatelessWidget {
                 child: Text(
                   item.note,
                   style: context.textTheme.bodyMedium?.copyWith(
+            fontSize: MediaQuery.sizeOf(context).shortestSide >= 600 ? 16 : null,
                     height: 1.5,
                     color: AppColors.textPrimary,
                   ),

@@ -1,6 +1,6 @@
+import '../registration_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -86,28 +86,30 @@ class PersonalInformationForm extends StatelessWidget {
         children: [
           Container(
             width: double.infinity,
-            padding: EdgeInsets.all(16.r),
+            padding: EdgeInsets.all(
+              context.registrationIsTablet ? 22 : 16.regR(context),
+            ),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(18.r),
+              borderRadius: BorderRadius.circular(18.regR(context)),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 48.r,
-                  height: 48.r,
+                  width: 48.regR(context),
+                  height: 48.regR(context),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFDEA2),
-                    borderRadius: BorderRadius.circular(14.r),
+                    borderRadius: BorderRadius.circular(14.regR(context)),
                   ),
                   child: Icon(
                     Icons.person_outline_rounded,
                     color: AppColors.textPrimary,
-                    size: 27.r,
+                    size: 27.regR(context),
                   ),
                 ),
-                SizedBox(width: 12.w),
+                SizedBox(width: 12.regW(context)),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,7 +121,7 @@ class PersonalInformationForm extends StatelessWidget {
                           color: AppColors.textPrimary,
                         ),
                       ),
-                      SizedBox(height: 5.h),
+                      SizedBox(height: 5.regH(context)),
                       Text(
                         'Müraciət edən şəxsin şəxsi və əlaqə '
                         'məlumatlarını daxil edin.',
@@ -135,7 +137,7 @@ class PersonalInformationForm extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 20.h),
+          SizedBox(height: 20.regH(context)),
 
           // Ad və Soyad
           Row(
@@ -152,7 +154,7 @@ class PersonalInformationForm extends StatelessWidget {
                   validator: AppValidators.requiredField,
                 ),
               ),
-              SizedBox(width: 12.w),
+              SizedBox(width: 12.regW(context)),
               Expanded(
                 child: AppTextField(
                   label: 'Soyad',
@@ -167,7 +169,7 @@ class PersonalInformationForm extends StatelessWidget {
             ],
           ),
 
-          SizedBox(height: 18.h),
+          SizedBox(height: 18.regH(context)),
 
           // FIN və şəxsiyyət vəsiqəsi seriya/nömrəsi
           Row(
@@ -190,7 +192,7 @@ class PersonalInformationForm extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(width: 12.w),
+              SizedBox(width: 12.regW(context)),
 
               Expanded(
                 child: AppTextField(
@@ -211,7 +213,7 @@ class PersonalInformationForm extends StatelessWidget {
             ],
           ),
 
-          SizedBox(height: 18.h),
+          SizedBox(height: 18.regH(context)),
 
           // Telefon nömrəsi
           AppTextField(
@@ -222,23 +224,23 @@ class PersonalInformationForm extends StatelessWidget {
             keyboardType: TextInputType.phone,
             textInputAction: TextInputAction.next,
             prefixIcon: Padding(
-              padding: EdgeInsets.only(left: 14.w),
+              padding: EdgeInsets.only(left: 14.regW(context)),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
                     Icons.phone_outlined,
-                    size: 18.r,
+                    size: 18.regR(context),
                     color: AppColors.textSecondary,
                   ),
-                  SizedBox(width: 7.w),
+                  SizedBox(width: 7.regW(context)),
                   Text(
                     '+994',
                     style: context.textTheme.bodyMedium?.copyWith(
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  SizedBox(width: 7.w),
+                  SizedBox(width: 7.regW(context)),
                 ],
               ),
             ),
@@ -249,7 +251,7 @@ class PersonalInformationForm extends StatelessWidget {
             validator: AppValidators.phone,
           ),
 
-          SizedBox(height: 18.h),
+          SizedBox(height: 18.regH(context)),
 
           // Ailə statusu
           AppDropdownField<int>(
@@ -260,7 +262,7 @@ class PersonalInformationForm extends StatelessWidget {
             prefixIcon: Icon(
               Icons.groups_outlined,
               color: AppColors.textSecondary,
-              size: 20.r,
+              size: 20.regR(context),
             ),
             items: _familyStatusItems.entries.map((entry) {
               return DropdownMenuItem<int>(
@@ -277,7 +279,7 @@ class PersonalInformationForm extends StatelessWidget {
             },
           ),
 
-          SizedBox(height: 18.h),
+          SizedBox(height: 18.regH(context)),
 
           // Müraciət qeydi
           AppTextField(
@@ -293,7 +295,7 @@ class PersonalInformationForm extends StatelessWidget {
             maxLength: 500,
           ),
 
-          SizedBox(height: 12.h),
+          SizedBox(height: 12.regH(context)),
         ],
       ),
     );

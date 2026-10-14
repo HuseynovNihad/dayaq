@@ -66,6 +66,7 @@ class FamilyDetailsHeader extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
     final date = family.createdAt == null
         ? ''
         : DateFormat('dd.MM.yyyy').format(family.createdAt!);
@@ -79,8 +80,8 @@ class FamilyDetailsHeader extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 52.r,
-                height: 52.r,
+                width: isTablet ? 64 : 52.r,
+                height: isTablet ? 64 : 52.r,
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(
                   color: Color(0xFFFFDDA4),
@@ -104,6 +105,7 @@ class FamilyDetailsHeader extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: context.textTheme.titleMedium?.copyWith(
+                        fontSize: isTablet ? 21 : null,
                         fontWeight: FontWeight.w700,
                         color: AppColors.textPrimary,
                       ),
@@ -117,6 +119,7 @@ class FamilyDetailsHeader extends StatelessWidget {
                       ].join(' • '),
                       maxLines: 2,
                       style: context.textTheme.bodySmall?.copyWith(
+                        fontSize: isTablet ? 15 : null,
                         color: const Color(0xFF777777),
                       ),
                     ),
@@ -130,7 +133,10 @@ class FamilyDetailsHeader extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                padding: EdgeInsets.symmetric(
+                  horizontal: isTablet ? 15 : 10.w,
+                  vertical: isTablet ? 7 : 5.h,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFEAF0FF),
                   borderRadius: BorderRadius.circular(18.r),
@@ -139,6 +145,7 @@ class FamilyDetailsHeader extends StatelessWidget {
                 child: Text(
                   _statusLabel,
                   style: context.textTheme.labelSmall?.copyWith(
+                    fontSize: isTablet ? 14 : null,
                     fontWeight: FontWeight.w600,
                     color: const Color(0xFF1745B7),
                   ),
@@ -193,6 +200,7 @@ class _HeaderAction extends StatelessWidget {
   final VoidCallback onTap;
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
     return Material(
       color: background,
       borderRadius: BorderRadius.circular(12.r),
@@ -200,11 +208,14 @@ class _HeaderAction extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(12.r),
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 5.w),
+          padding: EdgeInsets.symmetric(
+            vertical: isTablet ? 16 : 12.h,
+            horizontal: isTablet ? 12 : 5.w,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 17.r, color: const Color(0xFF173DA8)),
+              Icon(icon, size: isTablet ? 21 : 17.r, color: const Color(0xFF173DA8)),
               SizedBox(width: 6.w),
               Flexible(
                 child: Text(
@@ -212,6 +223,7 @@ class _HeaderAction extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: context.textTheme.labelMedium?.copyWith(
+                    fontSize: isTablet ? 15 : null,
                     fontWeight: FontWeight.w700,
                     color: AppColors.textPrimary,
                   ),

@@ -17,6 +17,7 @@ class FamilyDetailsTabs extends StatelessWidget {
   final ValueChanged<int> onChanged;
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
     final titles = [
       'Ümumi',
       'Üzvlər${memberCount == null ? '' : ' ($memberCount)'}',
@@ -24,7 +25,7 @@ class FamilyDetailsTabs extends StatelessWidget {
       'Sənədlər${documentCount == null ? '' : ' ($documentCount)'}',
     ];
     return Container(
-      padding: EdgeInsets.all(4.r),
+      padding: EdgeInsets.all(isTablet ? 6 : 4.r),
       decoration: BoxDecoration(
         color: const Color(0xFFF0F0F0),
         borderRadius: BorderRadius.circular(13.r),
@@ -41,8 +42,8 @@ class FamilyDetailsTabs extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10.r),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 2.w,
-                    vertical: 10.h,
+                    horizontal: isTablet ? 10 : 2.w,
+                    vertical: isTablet ? 16 : 10.h,
                   ),
                   child: Text(
                     titles[index],
@@ -50,6 +51,7 @@ class FamilyDetailsTabs extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     style: context.textTheme.labelSmall?.copyWith(
+                      fontSize: isTablet ? 15 : null,
                       color: selected
                           ? AppColors.textPrimary
                           : const Color(0xFF6C6C6C),

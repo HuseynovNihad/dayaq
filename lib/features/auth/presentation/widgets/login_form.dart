@@ -27,7 +27,6 @@ class _LoginFormState extends State<LoginForm> {
   bool _obscurePassword = true;
 
   static const _iconColor = Color(0xFF857968);
-  static const _linkColor = Color(0xFF3954D8);
 
   @override
   void dispose() {
@@ -61,10 +60,6 @@ class _LoginFormState extends State<LoginForm> {
     setState(() {
       _obscurePassword = !_obscurePassword;
     });
-  }
-
-  void _forgotPassword() {
-    // TODO: Şifrə bərpası səhifəsinə keçid.
   }
 
   @override

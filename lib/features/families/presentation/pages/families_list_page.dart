@@ -76,21 +76,22 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.textTheme;
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
 
     return Scaffold(
       backgroundColor: const Color(0xFFFAF9F7),
       appBar: AppBar(
-        toolbarHeight: 74.h,
+        toolbarHeight: isTablet ? 82 : 74.h,
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         elevation: 0,
         automaticallyImplyLeading: false,
-        titleSpacing: 20.w,
+        titleSpacing: isTablet ? 32 : 20.w,
         title: Row(
           children: [
             Container(
-              width: 44.r,
-              height: 44.r,
+              width: isTablet ? 54 : 44.r,
+              height: isTablet ? 54 : 44.r,
               alignment: Alignment.center,
               decoration: const BoxDecoration(
                 color: Color(0xFFFFEED6),
@@ -98,7 +99,7 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
               ),
               child: Icon(
                 Icons.volunteer_activism_outlined,
-                size: 24.r,
+                size: isTablet ? 28 : 24.r,
                 color: const Color(0xFF956409),
               ),
             ),
@@ -106,6 +107,7 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
             Text(
               'Ailələr',
               style: textTheme.titleLarge?.copyWith(
+                fontSize: isTablet ? 26 : null,
                 fontWeight: FontWeight.w700,
                 color: AppColors.textPrimary,
               ),
@@ -118,7 +120,7 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
             onPressed: () => context.push(AppRoutes.notifications),
             icon: Icon(
               Icons.notifications_none_rounded,
-              size: 26.r,
+              size: isTablet ? 30 : 26.r,
               color: const Color(0xFF574D3E),
             ),
           ),
@@ -137,9 +139,19 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   slivers: [
                     SliverPadding(
-                      padding: EdgeInsets.fromLTRB(18.w, 24.h, 18.w, 95.h),
-                      sliver: SliverList(
-                        delegate: SliverChildListDelegate([
+                      padding: EdgeInsets.fromLTRB(
+                        isTablet ? 32 : 18.w,
+                        isTablet ? 28 : 24.h,
+                        isTablet ? 32 : 18.w,
+                        isTablet ? 112 : 95.h,
+                      ),
+                      sliver: SliverToBoxAdapter(
+                        child: Center(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 1280),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
                           _buildTitleAndSort(context, textTheme, state),
                           SizedBox(height: 22.h),
                           _buildSearchField(context),
@@ -159,19 +171,30 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
                             if (state.filteredFamilies.isEmpty)
                               _buildEmptyState(context, state.hasActiveFilters)
                             else
-                              ...state.filteredFamilies.map(
-                                (family) => Padding(
-                                  padding: EdgeInsets.only(bottom: 14.h),
-                                  child: FamilyCard(
-                                    family: family,
-                                    onTap: () {
-                                      context.push(
-                                        AppRoutes.familyDetailsPath(family.id),
-                                        extra: family,
+                              LayoutBuilder(
+                                builder: (context, constraints) {
+                                  final twoColumns = constraints.maxWidth >= 850;
+                                  final gap = twoColumns ? 18.0 : 14.0;
+                                  final cardWidth = twoColumns
+                                      ? (constraints.maxWidth - gap) / 2
+                                      : constraints.maxWidth;
+                                  return Wrap(
+                                    spacing: gap,
+                                    runSpacing: gap,
+                                    children: state.filteredFamilies.map((family) {
+                                      return SizedBox(
+                                        width: cardWidth,
+                                        child: FamilyCard(
+                                          family: family,
+                                          onTap: () => context.push(
+                                            AppRoutes.familyDetailsPath(family.id),
+                                            extra: family,
+                                          ),
+                                        ),
                                       );
-                                    },
-                                  ),
-                                ),
+                                    }).toList(),
+                                  );
+                                },
                               ),
                           ] else if (state is FamiliesListError) ...[
                             _buildErrorState(context, state.message),
@@ -183,15 +206,18 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
                               ),
                             ),
                           ],
-                        ]),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
               Positioned(
-                bottom: 12.h,
-                right: 18.w,
+                bottom: isTablet ? 22 : 12.h,
+                right: isTablet ? 32 : 18.w,
                 child: _buildAddFamilyButton(context),
               ),
             ],
@@ -206,6 +232,7 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
     TextTheme textTheme,
     FamiliesListState state,
   ) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
     final count = state is FamiliesListLoaded ? state.totalFamilies : null;
     final sort = state is FamiliesListLoaded ? state.sort : FamiliesSort.newest;
 
@@ -219,6 +246,7 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
               Text(
                 'Ailələr',
                 style: textTheme.headlineSmall?.copyWith(
+                  fontSize: isTablet ? 28 : null,
                   fontWeight: FontWeight.w700,
                   color: AppColors.textPrimary,
                 ),
@@ -302,9 +330,10 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
 
   Widget _buildSearchField(BuildContext context) {
     final textTheme = context.textTheme;
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
 
     return Container(
-      height: 56.h,
+      height: isTablet ? 62 : 56.h,
       decoration: BoxDecoration(
         color: const Color(0xFFF4F3F1),
         borderRadius: BorderRadius.circular(16.r),
@@ -313,10 +342,14 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
         controller: _searchController,
         onChanged: _onSearchChanged,
         textInputAction: TextInputAction.search,
-        style: textTheme.bodyMedium?.copyWith(color: AppColors.textPrimary),
+        style: textTheme.bodyMedium?.copyWith(
+          fontSize: isTablet ? 17 : null,
+          color: AppColors.textPrimary,
+        ),
         decoration: InputDecoration(
           hintText: 'Ad, soyad və ya qeydiyyat nömrəsi',
           hintStyle: textTheme.bodyMedium?.copyWith(
+            fontSize: isTablet ? 17 : null,
             color: const Color(0xFF918476),
           ),
           prefixIcon: Icon(
@@ -350,8 +383,9 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
   }
 
   Widget _buildRegionFilters(BuildContext context, FamiliesListLoaded state) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
     return SizedBox(
-      height: 46.h,
+      height: isTablet ? 52 : 46.h,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
@@ -381,9 +415,10 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
     required VoidCallback onTap,
   }) {
     final textTheme = context.textTheme;
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
 
     return Padding(
-      padding: EdgeInsets.only(right: 7.w),
+      padding: EdgeInsets.only(right: isTablet ? 10 : 7.w),
       child: Material(
         color: selected ? AppColors.primary : Colors.white,
         borderRadius: BorderRadius.circular(28.r),
@@ -392,7 +427,7 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
           borderRadius: BorderRadius.circular(28.r),
           child: Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.symmetric(horizontal: 17.w),
+            padding: EdgeInsets.symmetric(horizontal: isTablet ? 22 : 17.w),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(28.r),
               border: selected
@@ -402,6 +437,7 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
             child: Text(
               label,
               style: textTheme.labelLarge?.copyWith(
+                fontSize: isTablet ? 15 : null,
                 color: selected
                     ? const Color(0xFF251C10)
                     : const Color(0xFF5C5144),
@@ -506,6 +542,7 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
 
   Widget _buildAddFamilyButton(BuildContext context) {
     final textTheme = context.textTheme;
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
 
     return Material(
       color: AppColors.primary,
@@ -516,21 +553,22 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
         onTap: () => context.go(AppRoutes.familyRegistration),
         borderRadius: BorderRadius.circular(16.r),
         child: Container(
-          height: 50.h,
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          height: isTablet ? 58 : 50.h,
+          padding: EdgeInsets.symmetric(horizontal: isTablet ? 22 : 16.w),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 Icons.person_add_alt_1_rounded,
-                size: 19.r,
+                size: isTablet ? 24 : 19.r,
                 color: const Color(0xFF251C10),
               ),
               SizedBox(width: 8.w),
               Text(
                 'Yeni ailə əlavə et',
                 style: textTheme.labelLarge?.copyWith(
+                  fontSize: isTablet ? 16 : null,
                   fontWeight: FontWeight.w700,
                   color: const Color(0xFF251C10),
                 ),

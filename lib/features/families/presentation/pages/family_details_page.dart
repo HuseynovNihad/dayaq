@@ -95,13 +95,14 @@ class _FamilyDetailsViewState extends State<_FamilyDetailsView> {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         elevation: 0,
-        toolbarHeight: 64.h,
+        toolbarHeight: isTablet ? 76 : 64.h,
         automaticallyImplyLeading: false,
         leading: IconButton(
           tooltip: 'Geri qayıt',
@@ -109,12 +110,13 @@ class _FamilyDetailsViewState extends State<_FamilyDetailsView> {
           icon: Icon(
             Icons.arrow_back_rounded,
             color: AppColors.textPrimary,
-            size: 23.r,
+            size: isTablet ? 27 : 23.r,
           ),
         ),
         title: Text(
           'Ailə Məlumatları',
           style: context.textTheme.titleLarge?.copyWith(
+            fontSize: isTablet ? 24 : null,
             color: AppColors.textPrimary,
             fontWeight: FontWeight.w700,
           ),
@@ -161,22 +163,32 @@ class _FamilyDetailsViewState extends State<_FamilyDetailsView> {
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
                 SliverPadding(
-                  padding: EdgeInsets.fromLTRB(16.w, 18.h, 16.w, 30.h),
-                  sliver: SliverList(
-                    delegate: SliverChildListDelegate([
+                  padding: EdgeInsets.fromLTRB(
+                    isTablet ? 32 : 16.w,
+                    isTablet ? 24 : 18.h,
+                    isTablet ? 32 : 16.w,
+                    isTablet ? 40 : 30.h,
+                  ),
+                  sliver: SliverToBoxAdapter(
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 1100),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
                       FamilyDetailsHeader(
                         family: widget.family,
                         showActions: _selectedTab == 0,
                         details: details,
                       ),
-                      SizedBox(height: 16.h),
+                      SizedBox(height: isTablet ? 22 : 16.h),
                       FamilyDetailsTabs(
                         selectedIndex: _selectedTab,
                         memberCount: details?.members.length,
                         documentCount: details?.documents.length,
                         onChanged: _onTabChanged,
                       ),
-                      SizedBox(height: 18.h),
+                      SizedBox(height: isTablet ? 24 : 18.h),
                       if (state is FamilyDetailsLoading ||
                           state is FamilyDetailsInitial) ...[
                         SizedBox(height: 100.h),
@@ -198,7 +210,10 @@ class _FamilyDetailsViewState extends State<_FamilyDetailsView> {
                           ),
                         _buildSelectedTab(state),
                       ],
-                    ]),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],
