@@ -3,7 +3,9 @@ import 'package:dio/dio.dart';
 import '../../../../core/error/app_failure.dart';
 import '../../../../core/error/result.dart';
 import '../../../../core/network/dio_failure_mapper.dart';
+import '../../../../core/services/notification_service.dart';
 import '../../../../core/storage/token_storage.dart';
+
 import '../../domain/entities/login_response_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_datasource.dart';
@@ -13,10 +15,12 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
     required this._remoteDataSource,
     required this._tokenStorage,
+    required this._notificationService,
   });
 
   final AuthRemoteDataSource _remoteDataSource;
   final TokenStorage _tokenStorage;
+  final NotificationService _notificationService;
 
   @override
   Future<Result<LoginResponseEntity>> login({
@@ -24,7 +28,19 @@ class AuthRepositoryImpl implements AuthRepository {
     required String password,
   }) async {
     try {
-      final request = LoginRequestModel(email: email, password: password);
+      String? fcmToken;
+
+      try {
+        fcmToken = await _notificationService.getToken();
+      } catch (_) {
+        fcmToken = null;
+      }
+
+      final request = LoginRequestModel(
+        email: email,
+        password: password,
+        fcmToken: fcmToken,
+      );
 
       final response = await _remoteDataSource.login(request);
 
@@ -66,16 +82,13 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       await _remoteDataSource.logout();
 
-      await _tokenStorage.deleteToken();
-      await _tokenStorage.deleteEmail();
+      await _tokenStorage.clearSession();
 
       return const Success<void>(null);
     } on DioException catch (error) {
       if (error.response?.statusCode == 401) {
         try {
-          await _tokenStorage.deleteToken();
-          await _tokenStorage.deleteEmail();
-
+          await _tokenStorage.clearSession();
           return const Success<void>(null);
         } catch (_) {
           return const Failure<void>(

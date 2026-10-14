@@ -11,6 +11,8 @@
     <!-- Camera -->
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
     <!-- Camera is optional for installation -->
     <uses-feature
         android:name="android.hardware.camera"

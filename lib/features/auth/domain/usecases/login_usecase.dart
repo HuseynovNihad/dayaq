@@ -4,8 +4,8 @@ import '../repositories/auth_repository.dart';
 
 class LoginUseCase {
   const LoginUseCase({
-    required AuthRepository repository,
-  }) : _repository = repository;
+    required this._repository,
+  });
 
   final AuthRepository _repository;
 

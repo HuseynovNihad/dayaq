@@ -1,14 +1,26 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'package:dayaq/core/config/app_config.dart';
 import 'package:dayaq/core/error/app_failure.dart';
 import 'package:dayaq/core/network/dio_factory.dart';
 import 'package:dayaq/core/network/dio_failure_mapper.dart';
+import 'package:dayaq/core/storage/token_storage.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   test('Missing API URL rejects requests with configuration error', () async {
-    final dio = createDio(const AppConfig(apiBaseUrl: ''));
+    const tokenStorage = TokenStorage(secureStorage: FlutterSecureStorage());
+
+    final dio = createDio(
+      const AppConfig(apiBaseUrl: ''),
+      tokenStorage: tokenStorage,
+    );
+
     addTearDown(() => dio.close(force: true));
+
     await expectLater(
       dio.get<dynamic>('/campaigns'),
       throwsA(
@@ -23,6 +35,7 @@ void main() {
 
   test('Unauthorized response maps to domain failure without raw response', () {
     final request = RequestOptions(path: '/profile');
+
     final failure = mapDioFailure(
       DioException(
         requestOptions: request,
@@ -34,6 +47,7 @@ void main() {
         ),
       ),
     );
+
     expect(failure.kind, FailureKind.unauthorized);
     expect(failure.statusCode, 401);
     expect(failure.message, isNot(contains('private')));
@@ -46,6 +60,7 @@ void main() {
         type: DioExceptionType.receiveTimeout,
       ),
     );
+
     expect(failure.kind, FailureKind.timeout);
   });
 }

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 
@@ -10,6 +11,7 @@ import '../../features/profile/di/profile_injection.dart';
 
 import '../config/app_config.dart';
 import '../network/dio_factory.dart';
+import '../services/notification_service.dart';
 import '../storage/token_storage.dart';
 
 final sl = GetIt.instance;
@@ -43,5 +45,14 @@ void _registerCoreDependencies(AppConfig? config) {
   sl.registerLazySingleton<Dio>(
     () => createDio(sl<AppConfig>(), tokenStorage: sl<TokenStorage>()),
     dispose: (dio) => dio.close(force: true),
+  );
+
+  // Firebase Messaging
+  sl.registerLazySingleton<FirebaseMessaging>(() => FirebaseMessaging.instance);
+
+  // Push Notification Service
+  sl.registerLazySingleton<NotificationService>(
+    () => NotificationService(sl<FirebaseMessaging>()),
+    dispose: (service) => service.dispose(),
   );
 }

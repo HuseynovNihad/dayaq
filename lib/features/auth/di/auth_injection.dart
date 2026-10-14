@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../core/services/notification_service.dart';
 import '../../../core/storage/token_storage.dart';
 import '../data/datasources/auth_remote_datasource.dart';
 import '../data/repositories/auth_repository_impl.dart';
@@ -18,6 +19,7 @@ void registerAuthDependencies(GetIt sl) {
     () => AuthRepositoryImpl(
       remoteDataSource: sl<AuthRemoteDataSource>(),
       tokenStorage: sl<TokenStorage>(),
+      notificationService: sl<NotificationService>(),
     ),
   );
 

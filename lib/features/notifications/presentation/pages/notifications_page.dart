@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../core/extensions/context_extensions.dart';
+import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../bloc/notification_bloc.dart';
 import '../widgets/notification_card.dart';
@@ -54,13 +55,20 @@ class _NotificationsView extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          onPressed: () => context.pop(),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go(AppRoutes.home);
+            }
+          },
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
             size: 20.r,
             color: AppColors.textPrimary,
           ),
         ),
+
         title: Text(
           'Bildirişlər',
           style: context.textTheme.titleLarge?.copyWith(
