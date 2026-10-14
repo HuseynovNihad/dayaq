@@ -30,23 +30,24 @@ class ProfileLogoutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const logoutColor = Color(0xFFD71920);
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
 
     return Material(
       color: const Color(0xFFFDE9EA),
-      borderRadius: BorderRadius.circular(16.r),
+      borderRadius: BorderRadius.circular(isTablet ? 18 : 16.r),
       child: InkWell(
         onTap: isLoading || onLogout == null
             ? null
             : () => _confirmLogout(context),
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(isTablet ? 18 : 16.r),
         child: SizedBox(
           width: double.infinity,
-          height: 52.h,
+          height: isTablet ? 60 : 52.h,
           child: Center(
             child: isLoading
                 ? SizedBox(
-                    width: 22.r,
-                    height: 22.r,
+                    width: isTablet ? 26 : 22.r,
+                    height: isTablet ? 26 : 22.r,
                     child: const CircularProgressIndicator(
                       strokeWidth: 2.5,
                       color: logoutColor,
@@ -57,13 +58,14 @@ class ProfileLogoutButton extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.logout_rounded,
-                        size: 20.r,
+                        size: isTablet ? 24 : 20.r,
                         color: logoutColor,
                       ),
-                      SizedBox(width: 9.w),
+                      SizedBox(width: isTablet ? 12 : 9.w),
                       Text(
                         'Sistemdən çıxış',
                         style: context.textTheme.labelLarge?.copyWith(
+                           fontSize: isTablet ? 17 : null,
                           color: logoutColor,
                           fontWeight: FontWeight.w700,
                         ),

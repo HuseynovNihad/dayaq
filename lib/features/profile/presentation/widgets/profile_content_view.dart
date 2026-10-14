@@ -68,6 +68,7 @@ class ProfileContentView extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context, ProfileContentLoaded state) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
     final contents = switch (type) {
       ProfileContentType.about => state.about.map((e) => e.about).toList(),
       ProfileContentType.termConditions =>
@@ -98,38 +99,39 @@ class ProfileContentView extends StatelessWidget {
       children: [
         for (final content in texts) ...[
           ProfileContentCard(content: content),
-          SizedBox(height: 12.h),
+          SizedBox(height: isTablet ? 16 : 12.h),
         ],
         for (final video in videos) ...[
           Material(
             color: const Color(0xFFFFF7E6),
-            borderRadius: BorderRadius.circular(16.r),
+            borderRadius: BorderRadius.circular(isTablet ? 18 : 16.r),
             child: InkWell(
               onTap: () => _openVideo(context, video),
-              borderRadius: BorderRadius.circular(16.r),
+              borderRadius: BorderRadius.circular(isTablet ? 18 : 16.r),
               child: Padding(
-                padding: EdgeInsets.all(16.r),
+                padding: EdgeInsets.all(isTablet ? 20 : 16.r),
                 child: Row(
                   children: [
                     Container(
-                      width: 45.r,
-                      height: 45.r,
+                      width: isTablet ? 54 : 45.r,
+                      height: isTablet ? 54 : 45.r,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(12.r),
+                        borderRadius: BorderRadius.circular(isTablet ? 14 : 12.r),
                       ),
                       child: Icon(
                         Icons.play_arrow_rounded,
                         color: Colors.white,
-                        size: 28.r,
+                        size: isTablet ? 30 : 28.r,
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: isTablet ? 16 : 12.w),
                     Expanded(
                       child: Text(
                         'Təlimat videosuna bax',
                         style: context.textTheme.titleSmall?.copyWith(
+                           fontSize: isTablet ? 17 : null,
                           fontWeight: FontWeight.w600,
                           color: AppColors.textPrimary,
                         ),
@@ -137,7 +139,7 @@ class ProfileContentView extends StatelessWidget {
                     ),
                     Icon(
                       Icons.open_in_new_rounded,
-                      size: 20.r,
+                      size: isTablet ? 24 : 20.r,
                       color: AppColors.textSecondary,
                     ),
                   ],
@@ -145,7 +147,7 @@ class ProfileContentView extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: isTablet ? 16 : 12.h),
         ],
       ],
     );
@@ -153,6 +155,8 @@ class ProfileContentView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
       appBar: AppBar(
@@ -163,6 +167,7 @@ class ProfileContentView extends StatelessWidget {
         title: Text(
           title,
           style: context.textTheme.titleMedium?.copyWith(
+             fontSize: isTablet ? 20 : null,
             color: AppColors.textPrimary,
             fontWeight: FontWeight.w700,
           ),
@@ -177,37 +182,48 @@ class ProfileContentView extends StatelessWidget {
           return RefreshIndicator(
             color: AppColors.primary,
             onRefresh: () => _refresh(context),
-            child: ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.fromLTRB(20.w, 22.h, 20.w, 30.h),
-              children: [
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 850),
+                child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.fromLTRB(
+                    isTablet ? 30 : 20.w,
+                    isTablet ? 30 : 22.h,
+                    isTablet ? 30 : 20.w,
+                    isTablet ? 40 : 30.h,
+                  ),
+                  children: [
                 Container(
-                  width: 54.r,
-                  height: 54.r,
+                  width: isTablet ? 64 : 54.r,
+                  height: isTablet ? 64 : 54.r,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFF2D6),
-                    borderRadius: BorderRadius.circular(16.r),
+                    borderRadius: BorderRadius.circular(isTablet ? 18 : 16.r),
                   ),
-                  child: Icon(icon, size: 27.r, color: const Color(0xFFD99613)),
+                  child: Icon(icon, size: isTablet ? 32 : 27.r, color: const Color(0xFFD99613)),
                 ),
-                SizedBox(height: 14.h),
+                SizedBox(height: isTablet ? 20 : 14.h),
                 Text(
                   title,
                   style: context.textTheme.headlineSmall?.copyWith(
+                     fontSize: isTablet ? 28 : null,
                     fontWeight: FontWeight.w700,
                     color: AppColors.textPrimary,
                   ),
                 ),
-                SizedBox(height: 7.h),
+                SizedBox(height: isTablet ? 10 : 7.h),
                 Text(
                   description,
                   style: context.textTheme.bodyMedium?.copyWith(
+                     fontSize: isTablet ? 16 : null,
                     color: AppColors.textSecondary,
                     height: 1.5,
                   ),
                 ),
-                SizedBox(height: 24.h),
+                SizedBox(height: isTablet ? 30 : 24.h),
                 if (state is ProfileContentLoading ||
                     state is ProfileContentInitial)
                   Padding(
@@ -226,11 +242,13 @@ class ProfileContentView extends StatelessWidget {
                 else if (state is ProfileContentLoaded) ...[
                   if (state.isRefreshing) ...[
                     const LinearProgressIndicator(),
-                    SizedBox(height: 14.h),
+                    SizedBox(height: isTablet ? 20 : 14.h),
                   ],
                   _buildContent(context, state),
                 ],
-              ],
+                  ],
+                ),
+              ),
             ),
           );
         },
@@ -244,16 +262,18 @@ class _ProfileContentEmpty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 45.h),
+      padding: EdgeInsets.symmetric(vertical: isTablet ? 56 : 45.h),
       child: Column(
         children: [
           Icon(
             Icons.article_outlined,
-            size: 42.r,
+            size: isTablet ? 48 : 42.r,
             color: AppColors.textSecondary,
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: isTablet ? 16 : 12.h),
           Text(
             'Hələ məlumat əlavə edilməyib.',
             textAlign: TextAlign.center,
@@ -275,16 +295,18 @@ class _ProfileContentError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 36.h),
+      padding: EdgeInsets.symmetric(vertical: isTablet ? 48 : 36.h),
       child: Column(
         children: [
           Icon(
             Icons.error_outline_rounded,
-            size: 45.r,
+            size: isTablet ? 50 : 45.r,
             color: const Color(0xFFD94A4A),
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: isTablet ? 16 : 12.h),
           Text(
             message,
             textAlign: TextAlign.center,

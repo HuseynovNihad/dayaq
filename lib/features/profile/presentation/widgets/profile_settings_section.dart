@@ -18,26 +18,29 @@ class ProfileSettingsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 4.w),
+          padding: EdgeInsets.only(left: isTablet ? 6 : 4.w),
           child: Text(
             'MƏLUMAT',
             style: context.textTheme.labelMedium?.copyWith(
+              fontSize: isTablet ? 15 : null,
               fontWeight: FontWeight.w700,
               color: const Color(0xFF707070),
               letterSpacing: 0.5,
             ),
           ),
         ),
-        SizedBox(height: 12.h),
+        SizedBox(height: isTablet ? 16 : 12.h),
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(18.r),
+            borderRadius: BorderRadius.circular(isTablet ? 20 : 18.r),
             border: Border.all(color: const Color(0xFFE1E1E1)),
             boxShadow: [
               BoxShadow(
@@ -93,23 +96,29 @@ class _SettingsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+
     return Column(
       children: [
         Material(
           color: Colors.transparent,
           child: InkWell(
             onTap: onTap,
-            borderRadius: BorderRadius.circular(14.r),
+            borderRadius: BorderRadius.circular(isTablet ? 16 : 14.r),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 17.h),
+              padding: EdgeInsets.symmetric(
+                  horizontal: isTablet ? 22 : 15.w,
+                  vertical: isTablet ? 21 : 17.h,
+                ),
               child: Row(
                 children: [
-                  Icon(icon, size: 21.r, color: iconColor),
-                  SizedBox(width: 12.w),
+                  Icon(icon, size: isTablet ? 26 : 21.r, color: iconColor),
+                  SizedBox(width: isTablet ? 16 : 12.w),
                   Expanded(
                     child: Text(
                       title,
                       style: context.textTheme.labelMedium?.copyWith(
+                        fontSize: isTablet ? 17 : null,
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.w600,
                       ),
@@ -118,7 +127,7 @@ class _SettingsItem extends StatelessWidget {
                   if (onTap != null)
                     Icon(
                       Icons.chevron_right_rounded,
-                      size: 21.r,
+                      size: isTablet ? 26 : 21.r,
                       color: const Color(0xFFB7B7B7),
                     ),
                 ],
@@ -130,8 +139,8 @@ class _SettingsItem extends StatelessWidget {
           Divider(
             height: 1,
             thickness: 1,
-            indent: 15.w,
-            endIndent: 15.w,
+            indent: isTablet ? 22 : 15.w,
+            endIndent: isTablet ? 22 : 15.w,
             color: const Color(0xFFF0F0F0),
           ),
       ],

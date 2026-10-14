@@ -63,6 +63,8 @@ class _ProfileViewState extends State<_ProfileView> {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+
     return BlocListener<AuthBloc, AuthState>(
       listenWhen: (previous, current) =>
           current is AuthLogoutSuccess || current is AuthLogoutFailure,
@@ -83,21 +85,30 @@ class _ProfileViewState extends State<_ProfileView> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.fromLTRB(20.w, 26.h, 20.w, 32.h),
-            child: Column(
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 800),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.fromLTRB(
+                  isTablet ? 28 : 20.w,
+                  isTablet ? 36 : 26.h,
+                  isTablet ? 28 : 20.w,
+                  isTablet ? 40 : 32.h,
+                ),
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ProfileUserCard(email: _email),
-                SizedBox(height: 26.h),
+                SizedBox(height: isTablet ? 32 : 26.h),
                 ProfileSettingsSection(
                   onAboutTap: () => context.push(AppRoutes.about),
                   onTermConditionsTap: () =>
                       context.push(AppRoutes.termConditions),
                   onRulesTap: () => context.push(AppRoutes.rules),
                 ),
-                SizedBox(height: 26.h),
+                SizedBox(height: isTablet ? 32 : 26.h),
                 BlocBuilder<AuthBloc, AuthState>(
                   buildWhen: (previous, current) =>
                       previous is AuthLogoutLoading ||
@@ -111,7 +122,9 @@ class _ProfileViewState extends State<_ProfileView> {
                     );
                   },
                 ),
-              ],
+                ],
+                ),
+              ),
             ),
           ),
         ),

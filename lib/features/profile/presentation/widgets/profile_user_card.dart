@@ -19,6 +19,7 @@ class ProfileUserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = context.textTheme;
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
     final displayEmail = email?.trim().isNotEmpty == true
         ? email!
         : 'Email məlumatı yoxdur';
@@ -29,17 +30,18 @@ class ProfileUserCard extends StatelessWidget {
         Text(
           'Profil və Tənzimləmələr',
           style: textTheme.headlineSmall?.copyWith(
+            fontSize: isTablet ? 28 : null,
             fontWeight: FontWeight.w700,
             color: AppColors.textPrimary,
           ),
         ),
-        SizedBox(height: 24.h),
+        SizedBox(height: isTablet ? 28 : 24.h),
         Container(
           width: double.infinity,
-          padding: EdgeInsets.all(18.r),
+          padding: EdgeInsets.all(isTablet ? 24 : 18.r),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(18.r),
+            borderRadius: BorderRadius.circular(isTablet ? 20 : 18.r),
             border: Border.all(color: const Color(0xFFE1E1E1)),
             boxShadow: [
               BoxShadow(
@@ -52,8 +54,8 @@ class ProfileUserCard extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: 58.r,
-                height: 58.r,
+                width: isTablet ? 68 : 58.r,
+                height: isTablet ? 68 : 58.r,
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(
                   color: Colors.black,
@@ -62,12 +64,13 @@ class ProfileUserCard extends StatelessWidget {
                 child: Text(
                   _initials,
                   style: textTheme.titleLarge?.copyWith(
+                    fontSize: isTablet ? 26 : null,
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
-              SizedBox(width: 14.w),
+              SizedBox(width: isTablet ? 20 : 14.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,6 +78,7 @@ class ProfileUserCard extends StatelessWidget {
                     Text(
                       'Hesab məlumatları',
                       style: textTheme.labelMedium?.copyWith(
+                        fontSize: isTablet ? 15 : null,
                         color: AppColors.textSecondary,
                         fontWeight: FontWeight.w500,
                       ),
@@ -85,6 +89,7 @@ class ProfileUserCard extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: textTheme.titleMedium?.copyWith(
+                        fontSize: isTablet ? 19 : null,
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.w700,
                       ),
