@@ -195,7 +195,7 @@ class _MemberInfo extends StatelessWidget {
 String _familyMemberTypeLabel(String value) {
   return switch (value.trim()) {
     '0' => 'Ana',
-    '1' => 'Ata',
+    '1' => 'Övlad',
     '2' => 'Oğlu',
     '3' => 'Qızı',
     '4' => 'Nənə',

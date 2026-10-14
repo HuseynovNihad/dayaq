@@ -296,21 +296,6 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
             ),
           ),
         ),
-        SizedBox(width: 7.w),
-        Container(
-          width: 46.r,
-          height: 46.r,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: const Color(0xFFF5F4F2),
-            borderRadius: BorderRadius.circular(15.r),
-          ),
-          child: Icon(
-            Icons.tune_rounded,
-            size: 23.r,
-            color: const Color(0xFF675845),
-          ),
-        ),
       ],
     );
   }

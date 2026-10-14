@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/constants/app_assets.dart';
-import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/app_validators.dart';
 import '../../../../core/widgets/app_button.dart';
@@ -158,27 +157,26 @@ class _LoginFormState extends State<LoginForm> {
 
                     SizedBox(height: 10.h),
 
-                    // Şifrəni unutmusunuz?
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: isBusy ? null : _forgotPassword,
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: 4.h),
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        child: Text(
-                          'Şifrəni unutmusunuz?',
-                          style: context.textTheme.bodySmall?.copyWith(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w600,
-                            color: _linkColor,
-                          ),
-                        ),
-                      ),
-                    ),
-
+                    // // Şifrəni unutmusunuz?
+                    // Align(
+                    //   alignment: Alignment.centerRight,
+                    //   child: TextButton(
+                    //     onPressed: isBusy ? null : _forgotPassword,
+                    //     style: TextButton.styleFrom(
+                    //       padding: EdgeInsets.symmetric(vertical: 4.h),
+                    //       minimumSize: Size.zero,
+                    //       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    //     ),
+                    //     child: Text(
+                    //       'Şifrəni unutmusunuz?',
+                    //       style: context.textTheme.bodySmall?.copyWith(
+                    //         fontSize: 12.sp,
+                    //         fontWeight: FontWeight.w600,
+                    //         color: _linkColor,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     SizedBox(height: 24.h),
 
                     // Daxil ol
