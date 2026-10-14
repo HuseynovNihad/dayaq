@@ -9,10 +9,12 @@ class FamilyMapView extends StatelessWidget {
     super.key,
     required this.families,
     this.fitAllMarkers = false,
+    this.fitPadding,
   });
 
   final List<FamilyEntity> families;
   final bool fitAllMarkers;
+  final EdgeInsets? fitPadding;
 
   static const String _appPackageName = 'az.dayaq.mobile';
 
@@ -39,6 +41,7 @@ class FamilyMapView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
     final validFamilies = families.where(hasValidCoordinates).toList();
 
     final coordinates = validFamilies
@@ -55,19 +58,25 @@ class FamilyMapView extends StatelessWidget {
         color: const Color(0xFFF3F1EA),
         alignment: Alignment.center,
         padding: const EdgeInsets.all(20),
-        child: const Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.map_outlined, size: 38, color: Colors.grey),
-            SizedBox(height: 10),
+            Icon(
+              Icons.map_outlined,
+              size: isTablet ? 48 : 38,
+              color: Colors.grey,
+            ),
+            SizedBox(height: isTablet ? 14 : 10),
             Text(
               'Xəritə API açarı təyin edilməyib.',
               textAlign: TextAlign.center,
+              style: TextStyle(fontSize: isTablet ? 17 : 14),
             ),
-            SizedBox(height: 6),
+            SizedBox(height: isTablet ? 10 : 6),
             Text(
               'MAPTILER_API_KEY konfiqurasiyasını yoxlayın.',
               textAlign: TextAlign.center,
+              style: TextStyle(fontSize: isTablet ? 15 : 12),
             ),
           ],
         ),
@@ -81,7 +90,7 @@ class FamilyMapView extends StatelessWidget {
         initialCameraFit: fitAllMarkers && coordinates.length > 1
             ? CameraFit.coordinates(
                 coordinates: coordinates,
-                padding: const EdgeInsets.all(48),
+                padding: fitPadding ?? EdgeInsets.all(isTablet ? 72 : 48),
                 maxZoom: 14,
               )
             : null,
@@ -101,12 +110,12 @@ class FamilyMapView extends StatelessWidget {
           markers: validFamilies.map((family) {
             return Marker(
               point: LatLng(family.lat!, family.lng!),
-              width: 44,
-              height: 44,
-              child: const Icon(
+              width: isTablet ? 54 : 44,
+              height: isTablet ? 54 : 44,
+              child: Icon(
                 Icons.location_on_rounded,
-                color: Color(0xFFF4B033),
-                size: 36,
+                color: const Color(0xFFF4B033),
+                size: isTablet ? 44 : 36,
               ),
             );
           }).toList(),
