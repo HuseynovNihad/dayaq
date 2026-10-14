@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -22,30 +21,33 @@ class HomeStatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+
     return Container(
       width: double.infinity,
-      height: 150.h,
-      padding: EdgeInsets.all(14.r),
+      constraints: BoxConstraints(minHeight: isTablet ? 145 : 140),
+      padding: EdgeInsets.all(isTablet ? 16 : 12),
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Statistika ikonu
           Container(
-            width: 36.r,
-            height: 36.r,
+            width: isTablet ? 46 : 34,
+            height: isTablet ? 46 : 34,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.7),
-              borderRadius: BorderRadius.circular(10.r),
+              borderRadius: BorderRadius.circular(isTablet ? 12 : 10),
             ),
-            child: Icon(icon, size: 21.r, color: iconColor),
+            child: Icon(icon, size: isTablet ? 26 : 20, color: iconColor),
           ),
 
-          SizedBox(height: 16.h),
+          SizedBox(height: isTablet ? 12 : 10),
 
           // Statistik rəqəm
           Text(
@@ -53,12 +55,14 @@ class HomeStatCard extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: context.textTheme.headlineLarge?.copyWith(
+              fontSize: isTablet ? 32 : 26,
               fontWeight: FontWeight.w700,
+              height: 1.1,
               color: AppColors.textPrimary,
             ),
           ),
 
-          SizedBox(height: 4.h),
+          SizedBox(height: isTablet ? 6 : 4),
 
           // Statistika başlığı
           Text(
@@ -66,6 +70,9 @@ class HomeStatCard extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: context.textTheme.bodyMedium?.copyWith(
+              fontSize: isTablet ? 16 : 13,
+              fontWeight: FontWeight.w500,
+              height: 1.3,
               color: AppColors.textSecondary,
             ),
           ),

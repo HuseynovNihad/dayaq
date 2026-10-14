@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/widgets/app_button.dart';
@@ -11,11 +10,14 @@ class HomeAddFamilyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+
     return AppButton(
       label: 'Yeni ailə əlavə et',
-      iconSpacing: 4,
-      icon: Icon(Icons.add_rounded, size: 20.r),
+      iconSpacing: isTablet ? 10 : 4,
+      icon: Icon(Icons.add_rounded, size: isTablet ? 28 : 20),
       textStyle: context.textTheme.titleMedium?.copyWith(
+        fontSize: isTablet ? 20 : null,
         fontWeight: FontWeight.w500,
       ),
       onPressed: onPressed,

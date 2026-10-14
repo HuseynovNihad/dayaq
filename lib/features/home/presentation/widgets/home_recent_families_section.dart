@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -20,6 +19,8 @@ class HomeRecentFamiliesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -29,18 +30,22 @@ class HomeRecentFamiliesSection extends StatelessWidget {
               child: Text(
                 'Son əlavə edilən ailələr',
                 style: context.textTheme.titleMedium?.copyWith(
+                  fontSize: isTablet ? 22 : null,
                   fontWeight: FontWeight.w700,
                   color: AppColors.textPrimary,
                 ),
               ),
             ),
 
-            SizedBox(width: 8.w),
+            SizedBox(width: isTablet ? 12 : 8),
 
             TextButton(
               onPressed: onSeeAllTap,
               style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
+                padding: EdgeInsets.symmetric(
+                  horizontal: isTablet ? 8 : 0,
+                  vertical: isTablet ? 8 : 0,
+                ),
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
@@ -50,13 +55,17 @@ class HomeRecentFamiliesSection extends StatelessWidget {
                   Text(
                     'Hamısına bax',
                     style: context.textTheme.labelMedium?.copyWith(
+                      fontSize: isTablet ? 15 : null,
                       fontWeight: FontWeight.w600,
                       color: const Color(0xFF3954D8),
                     ),
                   ),
+
+                  SizedBox(width: isTablet ? 4 : 0),
+
                   Icon(
                     Icons.chevron_right_rounded,
-                    size: 20.r,
+                    size: isTablet ? 24 : 20,
                     color: const Color(0xFF3954D8),
                   ),
                 ],
@@ -65,20 +74,21 @@ class HomeRecentFamiliesSection extends StatelessWidget {
           ],
         ),
 
-        SizedBox(height: 16.h),
+        SizedBox(height: isTablet ? 20 : 16),
 
         if (families.isEmpty)
           Container(
             width: double.infinity,
-            padding: EdgeInsets.all(20.r),
+            padding: EdgeInsets.all(isTablet ? 24 : 20),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(18.r),
+              borderRadius: BorderRadius.circular(isTablet ? 20 : 18),
             ),
             child: Text(
               'Hələlik ailə qeydiyyatı yoxdur.',
               textAlign: TextAlign.center,
               style: context.textTheme.bodyMedium?.copyWith(
+                fontSize: isTablet ? 16 : null,
                 color: AppColors.textSecondary,
               ),
             ),
@@ -93,7 +103,9 @@ class HomeRecentFamiliesSection extends StatelessWidget {
                       ? null
                       : () => onFamilyTap!(families[i]),
                 ),
-                if (i != families.length - 1) SizedBox(height: 12.h),
+
+                if (i != families.length - 1)
+                  SizedBox(height: isTablet ? 14 : 12),
               ],
             ],
           ),

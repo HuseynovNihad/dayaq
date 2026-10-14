@@ -10,7 +10,9 @@ import '../../../../core/widgets/app_text_field.dart';
 import '../bloc/auth_bloc.dart';
 
 class LoginForm extends StatefulWidget with SU {
-  const LoginForm({super.key});
+  const LoginForm({super.key, this.isTablet = false});
+
+  final bool isTablet;
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -79,10 +81,10 @@ class _LoginFormState extends State<LoginForm> {
           surfaceTintColor: Colors.transparent,
           margin: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.r),
+            borderRadius: BorderRadius.circular(widget.isTablet ? 20 : 20.r),
           ),
           child: Padding(
-            padding: EdgeInsets.all(AppSpacing.page),
+            padding: EdgeInsets.all(widget.isTablet ? 28 : AppSpacing.page),
             child: AutofillGroup(
               child: Form(
                 key: _formKey,
@@ -112,12 +114,12 @@ class _LoginFormState extends State<LoginForm> {
                       autofillHints: const [AutofillHints.username],
                       prefixIcon: Icon(
                         Icons.person_outline_rounded,
-                        size: 24.r,
+                        size: widget.isTablet ? 24 : 24.r,
                         color: _iconColor,
                       ),
                     ),
 
-                    SizedBox(height: AppSpacing.xl),
+                    SizedBox(height: widget.isTablet ? 24 : AppSpacing.xl),
 
                     // Şifrə
                     AppTextField(
@@ -137,7 +139,7 @@ class _LoginFormState extends State<LoginForm> {
                       onFieldSubmitted: (_) => _submit(),
                       prefixIcon: Icon(
                         Icons.lock_outline_rounded,
-                        size: 24.r,
+                        size: widget.isTablet ? 24 : 24.r,
                         color: _iconColor,
                       ),
                       suffixIcon: IconButton(
@@ -149,13 +151,13 @@ class _LoginFormState extends State<LoginForm> {
                           _obscurePassword
                               ? Icons.visibility_outlined
                               : Icons.visibility_off_outlined,
-                          size: 24.r,
+                          size: widget.isTablet ? 24 : 24.r,
                           color: _iconColor,
                         ),
                       ),
                     ),
 
-                    SizedBox(height: 10.h),
+                    SizedBox(height: widget.isTablet ? 10 : 10.h),
 
                     // // Şifrəni unutmusunuz?
                     // Align(
@@ -177,7 +179,7 @@ class _LoginFormState extends State<LoginForm> {
                     //     ),
                     //   ),
                     // ),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: widget.isTablet ? 24 : 24.h),
 
                     // Daxil ol
                     AppButton(

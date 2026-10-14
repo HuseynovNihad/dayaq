@@ -1,6 +1,4 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -18,41 +16,46 @@ class HomeStatisticsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Cari statistika göstəriciləri',
           style: context.textTheme.titleMedium?.copyWith(
+            fontSize: isTablet ? 22 : null,
             fontWeight: FontWeight.w700,
             color: AppColors.textPrimary,
           ),
         ),
 
-        SizedBox(height: 16.h),
+        SizedBox(height: isTablet ? 20 : 16),
 
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: HomeStatCard(
-                title: 'Ümumi ailələr',
-                value: totalFamilies.toString(),
-                icon: Icons.family_restroom_rounded,
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: HomeStatCard(
+                  title: 'Ümumi ailələr',
+                  value: totalFamilies.toString(),
+                  icon: Icons.family_restroom_rounded,
+                ),
               ),
-            ),
 
-            SizedBox(width: 12.w),
+              SizedBox(width: isTablet ? 16 : 12),
 
-            Expanded(
-              child: HomeStatCard(
-                title: 'Bu ay əlavə edilən',
-                value: monthlyRegistrations.toString(),
-                icon: Icons.calendar_month_rounded,
-                iconColor: const Color(0xFF3954D8),
+              Expanded(
+                child: HomeStatCard(
+                  title: 'Bu ay əlavə edilən',
+                  value: monthlyRegistrations.toString(),
+                  icon: Icons.calendar_month_rounded,
+                  iconColor: const Color(0xFF3954D8),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -32,84 +31,109 @@ class HomeNearbyRegistrations extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+
     final mappedFamilies = families.where(_hasValidCoordinates).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Bölmə başlığı
         Text(
           'Yaxınlıqdakı qeydiyyatlar',
           style: context.textTheme.titleMedium?.copyWith(
+            fontSize: isTablet ? 22 : null,
             fontWeight: FontWeight.w700,
             color: AppColors.textPrimary,
           ),
         ),
 
-        SizedBox(height: 6.h),
+        SizedBox(height: isTablet ? 8 : 6),
 
+        // Açıqlama mətni
         Text(
           'Xəritədə qeydiyyatların yerləşməsi',
           style: context.textTheme.bodySmall?.copyWith(
+            fontSize: isTablet ? 16 : null,
             color: AppColors.textSecondary,
           ),
         ),
 
-        SizedBox(height: 16.h),
+        SizedBox(height: isTablet ? 20 : 16),
 
+        // Xəritə kartı
         Container(
           width: double.infinity,
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(18.r),
+            borderRadius: BorderRadius.circular(isTablet ? 20 : 18),
             border: Border.all(color: const Color(0xFFF0ECE7)),
           ),
           child: Column(
             children: [
+              // Xəritə
               SizedBox(
-                height: 200.h,
+                height: isTablet ? 280 : 200,
                 width: double.infinity,
                 child: FamilyMapView(families: mappedFamilies),
               ),
 
+              // Xəritənin alt məlumat hissəsi
               Padding(
-                padding: EdgeInsets.all(14.r),
+                padding: EdgeInsets.all(isTablet ? 18 : 14),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.location_on_outlined,
-                      size: 20.r,
+                      size: isTablet ? 26 : 20,
                       color: AppColors.primary,
                     ),
 
-                    SizedBox(width: 8.w),
+                    SizedBox(width: isTablet ? 12 : 8),
 
                     Expanded(
                       child: Text(
                         '${mappedFamilies.length} qeydiyyat xəritədə',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: context.textTheme.bodyMedium?.copyWith(
-                          color: AppColors.textPrimary,
+                          fontSize: isTablet ? 16 : null,
                           fontWeight: FontWeight.w500,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                     ),
 
+                    SizedBox(width: isTablet ? 8 : 4),
+
                     TextButton(
                       onPressed: onOpenMap,
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isTablet ? 10 : 6,
+                          vertical: isTablet ? 10 : 8,
+                        ),
+                        minimumSize: const Size(0, 44),
+                      ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
                             'Xəritəni aç',
                             style: context.textTheme.labelMedium?.copyWith(
-                              color: const Color(0xFF3954D8),
+                              fontSize: isTablet ? 15 : null,
                               fontWeight: FontWeight.w600,
+                              color: const Color(0xFF3954D8),
                             ),
                           ),
-                          SizedBox(width: 4.w),
+
+                          SizedBox(width: isTablet ? 8 : 4),
+
                           Icon(
                             Icons.arrow_forward_ios_rounded,
-                            size: 12.r,
+                            size: isTablet ? 15 : 12,
                             color: const Color(0xFF3954D8),
                           ),
                         ],

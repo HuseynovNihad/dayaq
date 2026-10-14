@@ -48,6 +48,8 @@ class _HomeHeaderState extends State<HomeHeader> {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+
     final now = DateTime.now();
     final greeting = _getGreeting(now.hour);
     final date = DateFormat('d MMMM yyyy', 'az').format(now);
@@ -65,17 +67,19 @@ class _HomeHeaderState extends State<HomeHeader> {
                   Text(
                     greeting,
                     style: context.textTheme.bodyMedium?.copyWith(
+                      fontSize: isTablet ? 22 : null,
                       color: AppColors.textSecondary,
                     ),
                   ),
 
-                  SizedBox(height: 4.h),
+                  SizedBox(height: isTablet ? 6.h : 4.h),
 
                   Text(
                     _displayName,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: context.textTheme.headlineSmall?.copyWith(
+                      fontSize: isTablet ? 32 : null,
                       fontWeight: FontWeight.w700,
                       color: AppColors.textPrimary,
                     ),
@@ -84,14 +88,18 @@ class _HomeHeaderState extends State<HomeHeader> {
               ),
             ),
 
-            SizedBox(width: 12.w),
+            SizedBox(width: isTablet ? 20.h : 12.h),
 
             IconButton(
               onPressed: widget.onNotificationTap,
               tooltip: 'Bildirişlər',
+              iconSize: isTablet ? 30 : 24,
+              constraints: BoxConstraints(
+                minWidth: isTablet ? 56 : 48,
+                minHeight: isTablet ? 56 : 48,
+              ),
               icon: Icon(
                 Icons.notifications_none_rounded,
-                size: 24.r,
                 color: AppColors.textPrimary,
               ),
             ),
@@ -104,15 +112,16 @@ class _HomeHeaderState extends State<HomeHeader> {
           children: [
             Icon(
               Icons.calendar_today_outlined,
-              size: 14.r,
+              size: isTablet ? 22 : 14,
               color: AppColors.textSecondary,
             ),
 
-            SizedBox(width: 8.w),
+            SizedBox(width: isTablet ? 12.h : 8.h),
 
             Text(
               date,
               style: context.textTheme.labelMedium?.copyWith(
+                fontSize: isTablet ? 15 : null,
                 color: AppColors.textSecondary,
               ),
             ),

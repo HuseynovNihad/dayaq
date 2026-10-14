@@ -7,7 +7,9 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 
 class LoginHeader extends StatelessWidget with SU {
-  const LoginHeader({super.key});
+  const LoginHeader({super.key, this.isTablet = false});
+
+  final bool isTablet;
 
   @override
   Widget build(BuildContext context) {
@@ -15,22 +17,25 @@ class LoginHeader extends StatelessWidget with SU {
       children: [
         Image.asset(
           AppAssets.logo,
-          width: 104.r,
-          height: 104.r,
+          width: isTablet ? 112 : 104.r,
+          height: isTablet ? 112 : 104.r,
           fit: BoxFit.contain,
           semanticLabel: 'Dayaq loqosu',
         ),
         Text(
           'Xoş gəlmisiniz',
           textAlign: TextAlign.center,
-          style: context.textTheme.headlineMedium,
+          style: context.textTheme.headlineMedium?.copyWith(
+            fontSize: isTablet ? 30 : null,
+          ),
         ),
-        SizedBox(height: AppSpacing.sm),
+        SizedBox(height: isTablet ? 12 : AppSpacing.sm),
         Text(
           'Ailələrin qeydiyyatı və idarə edilməsi sistemi',
           textAlign: TextAlign.center,
           style: context.textTheme.bodyMedium?.copyWith(
             color: AppColors.textSecondary,
+            fontSize: isTablet ? 16 : null,
           ),
         ),
       ],

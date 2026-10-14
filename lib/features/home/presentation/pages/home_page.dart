@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/di/injection.dart';
@@ -40,124 +39,154 @@ class _HomeView extends StatelessWidget {
       body: SafeArea(
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
-            return RefreshIndicator(
-              onRefresh: () async {
-                final bloc = context.read<HomeBloc>();
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                final isTablet = constraints.maxWidth >= 700;
+                final useTwoColumns = constraints.maxWidth >= 900;
+                final horizontalPadding = isTablet ? 32.0 : AppSpacing.page;
 
-                bloc.add(const HomeRefreshed());
-
-                await bloc.stream.firstWhere(
-                  (state) => state is HomeLoaded || state is HomeError,
-                );
-              },
-              child: CustomScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                slivers: [
-                  SliverPadding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSpacing.page,
-                      vertical: 20.h,
-                    ),
-                    sliver: SliverList(
-                      delegate: SliverChildListDelegate([
-                        HomeHeader(
-                          onNotificationTap: () =>
-                              context.push(AppRoutes.notifications),
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    final bloc = context.read<HomeBloc>();
+                    bloc.add(const HomeRefreshed());
+                    await bloc.stream.firstWhere(
+                      (next) => next is HomeLoaded || next is HomeError,
+                    );
+                  },
+                  child: CustomScrollView(
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    slivers: [
+                      SliverPadding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: horizontalPadding,
+                          vertical: isTablet ? 28 : 20,
                         ),
+                        sliver: SliverToBoxAdapter(
+                          child: Center(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 1280),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  HomeHeader(
+                                    onNotificationTap: () =>
+                                        context.push(AppRoutes.notifications),
+                                  ),
+                                  SizedBox(height: isTablet ? 28 : 24),
+                                  const HomeWelcomeBanner(),
+                                  SizedBox(height: isTablet ? 24 : 20),
+                                  HomeAddFamilyButton(
+                                    onPressed: () => context.go(
+                                      AppRoutes.familyRegistration,
+                                    ),
+                                  ),
+                                  SizedBox(height: isTablet ? 32 : 28),
+                                  if (state is HomeLoaded) ...[
+                                    HomeStatisticsSection(
+                                      totalFamilies: state.totalFamilies,
+                                      monthlyRegistrations:
+                                          state.monthlyRegistrations,
+                                    ),
+                                    SizedBox(height: isTablet ? 32 : 28),
+                                    if (useTwoColumns)
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: HomeRecentFamiliesSection(
+                                              families: state.recentFamilies,
+                                              onSeeAllTap: () {
+                                                context.go(AppRoutes.families);
+                                              },
+                                              onFamilyTap: (family) {
+                                                // TODO: Ailə detalları, family.id.
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 24),
+                                          Expanded(
+                                            child: HomeNearbyRegistrations(
+                                              families: state.families,
+                                              onOpenMap: () => context.push(
+                                                AppRoutes.map,
+                                                extra: state.families,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    else ...[
+                                      HomeRecentFamiliesSection(
+                                        families: state.recentFamilies,
+                                        onSeeAllTap: () =>
+                                            context.go(AppRoutes.families),
 
-                        SizedBox(height: 24.h),
-
-                        const HomeWelcomeBanner(),
-
-                        SizedBox(height: 20.h),
-
-                        HomeAddFamilyButton(
-                          onPressed: () {
-                            context.go(AppRoutes.familyRegistration);
-                          },
-                        ),
-
-                        SizedBox(height: 28.h),
-
-                        if (state is HomeLoaded) ...[
-                          HomeStatisticsSection(
-                            totalFamilies: state.totalFamilies,
-                            monthlyRegistrations: state.monthlyRegistrations,
-                          ),
-
-                          SizedBox(height: 28.h),
-
-                          HomeRecentFamiliesSection(
-                            families: state.recentFamilies,
-                            onSeeAllTap: () {
-                              // TODO: Ailələr səhifəsi.
-                            },
-                            onFamilyTap: (family) {
-                              // TODO: Ailə detalları.
-                              // family.id istifadə olunacaq.
-                            },
-                          ),
-
-                          SizedBox(height: 28.h),
-
-                          HomeNearbyRegistrations(
-                            families: state.families,
-                            onOpenMap: () {
-                              context.push(
-                                AppRoutes.map,
-                                extra: state.families,
-                              );
-                            },
-                          ),
-                        ],
-
-                        if (state is HomeInitial || state is HomeLoading) ...[
-                          SizedBox(height: 80.h),
-
-                          const Center(child: CircularProgressIndicator()),
-                        ],
-
-                        if (state is HomeError) ...[
-                          SizedBox(height: 48.h),
-
-                          Center(
-                            child: Column(
-                              children: [
-                                const Icon(
-                                  Icons.error_outline_rounded,
-                                  size: 42,
-                                  color: Colors.redAccent,
-                                ),
-
-                                SizedBox(height: 12.h),
-
-                                Text(
-                                  state.message,
-                                  textAlign: TextAlign.center,
-                                ),
-
-                                SizedBox(height: 16.h),
-
-                                TextButton.icon(
-                                  onPressed: () {
-                                    context.read<HomeBloc>().add(
-                                      const HomeStarted(),
-                                    );
-                                  },
-                                  icon: const Icon(Icons.refresh_rounded),
-                                  label: const Text('Yenidən cəhd et'),
-                                ),
-                              ],
+                                        onFamilyTap: (family) {
+                                          // TODO: Ailə detalları, family.id.
+                                        },
+                                      ),
+                                      SizedBox(height: isTablet ? 32 : 28),
+                                      HomeNearbyRegistrations(
+                                        families: state.families,
+                                        onOpenMap: () => context.push(
+                                          AppRoutes.map,
+                                          extra: state.families,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                  if (state is HomeInitial ||
+                                      state is HomeLoading) ...[
+                                    const SizedBox(height: 80),
+                                    const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ],
+                                  if (state is HomeError) ...[
+                                    const SizedBox(height: 48),
+                                    Center(
+                                      child: Column(
+                                        children: [
+                                          const Icon(
+                                            Icons.error_outline_rounded,
+                                            size: 42,
+                                            color: Colors.redAccent,
+                                          ),
+                                          const SizedBox(height: 12),
+                                          Text(
+                                            state.message,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          const SizedBox(height: 16),
+                                          TextButton.icon(
+                                            onPressed: () => context
+                                                .read<HomeBloc>()
+                                                .add(const HomeStarted()),
+                                            icon: const Icon(
+                                              Icons.refresh_rounded,
+                                            ),
+                                            label: const Text(
+                                              'Yenidən cəhd et',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                  const SizedBox(height: 32),
+                                ],
+                              ),
                             ),
                           ),
-                        ],
-
-                        SizedBox(height: 32.h),
-                      ]),
-                    ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                );
+              },
             );
           },
         ),
