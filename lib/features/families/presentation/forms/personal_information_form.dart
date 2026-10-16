@@ -17,6 +17,7 @@ class PersonalInformationForm extends StatelessWidget {
     required this.finController,
     required this.seriaNumberController,
     required this.phoneController,
+    required this.secondaryPhoneController,
     required this.salaryController,
     required this.noteController,
     required this.familyStatus,
@@ -30,6 +31,7 @@ class PersonalInformationForm extends StatelessWidget {
   final TextEditingController finController;
   final TextEditingController seriaNumberController;
   final TextEditingController phoneController;
+  final TextEditingController secondaryPhoneController;
   final TextEditingController salaryController;
   final TextEditingController noteController;
 
@@ -251,6 +253,46 @@ class PersonalInformationForm extends StatelessWidget {
               LengthLimitingTextInputFormatter(9),
             ],
             validator: AppValidators.phone,
+          ),
+
+          SizedBox(height: 18.regH(context)),
+
+          // İkinci telefon nömrəsi (istəyə bağlı).
+          AppTextField(
+            label: 'Əlavə telefon nömrəsi (istəyə bağlı)',
+            hintText: '501234567',
+            controller: secondaryPhoneController,
+            keyboardType: TextInputType.phone,
+            textInputAction: TextInputAction.next,
+            prefixIcon: Padding(
+              padding: EdgeInsets.only(left: 14.regW(context)),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.phone_outlined,
+                    size: 18.regR(context),
+                    color: AppColors.textSecondary,
+                  ),
+                  SizedBox(width: 7.regW(context)),
+                  Text(
+                    '+994',
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  SizedBox(width: 7.regW(context)),
+                ],
+              ),
+            ),
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(9),
+            ],
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) return null;
+              return AppValidators.phone(value);
+            },
           ),
 
           SizedBox(height: 18.regH(context)),

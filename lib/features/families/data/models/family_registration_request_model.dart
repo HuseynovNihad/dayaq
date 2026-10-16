@@ -7,6 +7,7 @@ class FamilyRegistrationRequestModel {
     required this.fin,
     required this.seriaNumber,
     required this.phone,
+    this.phone2,
     required this.regionId,
     required this.address,
     required this.familyStatus,
@@ -53,6 +54,10 @@ class FamilyRegistrationRequestModel {
   final String fin;
   final String seriaNumber;
   final String phone;
+
+  // İkinci telefon nömrəsi — istəyə bağlı
+  final String? phone2;
+
   final int regionId;
   final String address;
   final int familyStatus;
@@ -90,21 +95,27 @@ class FamilyRegistrationRequestModel {
   final List<num> salaryMember;
 
   // ADDIM 6 — Sənədlər
-  // Lokal PDF fayllarının yolları; title ilə sıra uyğunluğu qorunur.
+  // Lokal PDF fayllarının yolları
   final List<String> documents;
   final List<String> title;
+
+  // İkinci nömrə yalnız daxil edildikdə göndərilir.
+  bool get hasSecondPhone => phone2 != null && phone2!.trim().isNotEmpty;
 
   Future<FormData> toFormData() async {
     if (documents.length != title.length) {
       throw const FormatException('Sənəd və başlıq sayı eyni olmalıdır.');
     }
+
     if (nameMember.length != surnameMember.length ||
         nameMember.length != statusMember.length ||
         nameMember.length != birthMember.length ||
         nameMember.length != salaryMember.length) {
       throw const FormatException('Ailə üzvü məlumatları uyğun deyil.');
     }
+
     final formData = FormData();
+
     void field(String key, Object value) {
       formData.fields.add(MapEntry(key, value.toString()));
     }
@@ -115,15 +126,28 @@ class FamilyRegistrationRequestModel {
       }
     }
 
+    // ADDIM 1 — Şəxsi məlumatlar
     field('name', name.trim());
     field('surname', surname.trim());
     field('fin', fin.trim().toUpperCase());
     field('seria_number', seriaNumber.trim().toUpperCase());
     field('phone', phone.trim());
+
+    // İkinci nömrə optional-dır.
+    // Boş olduqda request-ə əlavə edilmir.
+    if (hasSecondPhone) {
+      field('phone2', phone2!.trim());
+    }
+
     field('region_id', regionId);
     field('address', address.trim());
     field('family_status', familyStatus);
-    if (note != null && note!.trim().isNotEmpty) field('note', note!.trim());
+
+    if (note != null && note!.trim().isNotEmpty) {
+      field('note', note!.trim());
+    }
+
+    // ADDIM 4 — Gəlirlər
     field('salary', salary);
     field('physical_labor', physicalLabor);
     field('sosial', sosial);
@@ -132,6 +156,8 @@ class FamilyRegistrationRequestModel {
     field('charity', charity);
     field('individual_assistance', individualAssistance);
     field('education', education);
+
+    // ADDIM 5 — Xərclər
     field('education_ex', educationEx);
     field('rent_ex', rentEx);
     field('electric_ex', electricEx);
@@ -139,44 +165,65 @@ class FamilyRegistrationRequestModel {
     field('gas_ex', gasEx);
     field('heating_system_ex', heatingSystemEx);
     field('communication_ex', communicationEx);
-    if (lat != null && lat!.trim().isNotEmpty) field('lat', lat!.trim());
-    if (lng != null && lng!.trim().isNotEmpty) field('lng', lng!.trim());
+
+    // ADDIM 2 — GPS
+    if (lat != null && lat!.trim().isNotEmpty) {
+      field('lat', lat!.trim());
+    }
+
+    if (lng != null && lng!.trim().isNotEmpty) {
+      field('lng', lng!.trim());
+    }
+
+    // ADDIM 3 — Ailə üzvləri
     arrayField('name_member', nameMember);
     arrayField('surname_member', surnameMember);
     arrayField('status_member', statusMember);
     arrayField('birth_member', birthMember);
     arrayField('salary_member', salaryMember);
+
+    // ADDIM 6 — PDF sənədləri
     for (var i = 0; i < documents.length; i++) {
       final path = documents[i];
+
       if (!path.toLowerCase().endsWith('.pdf')) {
         throw const FormatException('Yalnız PDF sənədləri göndərilə bilər.');
       }
+
       final filename = Uri.file(path).pathSegments.last;
+
       formData.files.add(
         MapEntry(
           'documents[]',
           await MultipartFile.fromFile(path, filename: filename),
         ),
       );
+
       field('title[]', title[i].trim());
     }
+
     return formData;
   }
 
   Map<String, dynamic> toJson() {
     return {
+      // ADDIM 1 — Şəxsi məlumatlar
       'name': name.trim(),
       'surname': surname.trim(),
       'fin': fin.trim().toUpperCase(),
       'seria_number': seriaNumber.trim().toUpperCase(),
       'phone': phone.trim(),
+
+      // İkinci telefon nömrəsi
+      if (hasSecondPhone) 'phone2': phone2!.trim(),
+
       'region_id': regionId,
       'address': address.trim(),
       'family_status': familyStatus,
 
       if (note != null && note!.trim().isNotEmpty) 'note': note!.trim(),
 
-      // Gəlirlər
+      // ADDIM 4 — Gəlirlər
       'salary': salary,
       'physical_labor': physicalLabor,
       'sosial': sosial,
@@ -186,7 +233,7 @@ class FamilyRegistrationRequestModel {
       'individual_assistance': individualAssistance,
       'education': education,
 
-      // Xərclər
+      // ADDIM 5 — Xərclər
       'education_ex': educationEx,
       'rent_ex': rentEx,
       'electric_ex': electricEx,
@@ -195,18 +242,19 @@ class FamilyRegistrationRequestModel {
       'heating_system_ex': heatingSystemEx,
       'communication_ex': communicationEx,
 
-      // GPS
-      if (lat != null) 'lat': lat,
-      if (lng != null) 'lng': lng,
+      // ADDIM 2 — GPS
+      if (lat != null && lat!.trim().isNotEmpty) 'lat': lat!.trim(),
 
-      // Ailə üzvləri
+      if (lng != null && lng!.trim().isNotEmpty) 'lng': lng!.trim(),
+
+      // ADDIM 3 — Ailə üzvləri
       'name_member': nameMember,
       'surname_member': surnameMember,
       'status_member': statusMember,
       'birth_member': birthMember,
       'salary_member': salaryMember,
 
-      // Sənədlər
+      // ADDIM 6 — Sənədlər
       'documents': documents,
       'title': title,
     };

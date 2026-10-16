@@ -14,11 +14,18 @@ class FamilyDetailsModel extends FamilyDetailsEntity {
     required super.monthlyMedicalEx,
     super.lat,
     super.lng,
+    this.phone2,
   });
+
+  // API-dən gəlməsə null olaraq qalır.
+  final String? phone2;
 
   factory FamilyDetailsModel.fromJson(Map<String, dynamic> json) {
     return FamilyDetailsModel(
       region: json['region']?.toString() ?? '',
+      phone2: json['phone2']?.toString().trim().isNotEmpty == true
+          ? json['phone2'].toString().trim()
+          : null,
       members: _parseList(json['members'], FamilyDetailMemberModel.fromJson),
       documents: _parseList(
         json['documents'],

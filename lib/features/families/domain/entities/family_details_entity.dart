@@ -12,6 +12,7 @@ class FamilyDetailsEntity {
     required this.monthlyMedicalEx,
     this.lat,
     this.lng,
+    this.phone2,
   });
 
   final String region;
@@ -26,6 +27,8 @@ class FamilyDetailsEntity {
   final num monthlyMedicalEx;
   final double? lat;
   final double? lng;
+  // Optional secondary contact number from API.
+  final String? phone2;
 
   num get totalExpenses =>
       rentEx + communalEx + chronicPatientEx + monthlyDebtEx + monthlyMedicalEx;

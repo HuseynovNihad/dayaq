@@ -5,6 +5,7 @@ import '../../../../../core/extensions/context_extensions.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../domain/entities/family_details_entity.dart';
 import '../../../domain/entities/family_entity.dart';
+import '../../../data/models/family_details_model.dart';
 import 'detail_common_widgets.dart';
 
 class FamilyOverviewTab extends StatelessWidget {
@@ -19,6 +20,9 @@ class FamilyOverviewTab extends StatelessWidget {
     final lat = details.lat ?? family.lat;
     final lng = details.lng ?? family.lng;
     final hasCoordinates = lat != null && lng != null;
+    final phone2 = details is FamilyDetailsModel
+        ? ((details as FamilyDetailsModel).phone2 ?? '').trim()
+        : '';
     return Column(
       children: [
         DetailCard(
@@ -28,11 +32,16 @@ class FamilyOverviewTab extends StatelessWidget {
               const DetailSectionTitle('AİLƏ VƏ ƏLAQƏ MƏLUMATLARI'),
               SizedBox(height: 8.h),
               DetailInfoRow(
-                label: 'Telefon nömrəsi',
+                label: 'Əsas telefon nömrəsi',
                 value: family.phone.trim().isEmpty
                     ? 'Məlumat yoxdur'
                     : family.phone,
               ),
+              if (phone2.isNotEmpty)
+                DetailInfoRow(
+                  label: 'Əlavə telefon nömrəsi',
+                  value: phone2,
+                ),
               DetailInfoRow(
                 label: 'Qeydiyyat nömrəsi',
                 value: family.registerNumber.trim().isEmpty

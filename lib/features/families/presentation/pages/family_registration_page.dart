@@ -46,6 +46,7 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
   final _finController = TextEditingController();
   final _seriaNumberController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _secondaryPhoneController = TextEditingController();
   final _personalSalaryController = TextEditingController();
   final _noteController = TextEditingController();
   int? _familyStatus;
@@ -86,6 +87,7 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
     _finController.dispose();
     _seriaNumberController.dispose();
     _phoneController.dispose();
+    _secondaryPhoneController.dispose();
     _personalSalaryController.dispose();
     _noteController.dispose();
     _addressController.dispose();
@@ -112,6 +114,7 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
     _firstNameController.clear();
     _lastNameController.clear();
     _phoneController.clear();
+    _secondaryPhoneController.clear();
     _personalSalaryController.clear();
     _noteController.clear();
     _addressController.clear();
@@ -317,6 +320,9 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
       fin: _finController.text.trim().toUpperCase(),
       seriaNumber: _seriaNumberController.text.trim().toUpperCase(),
       phone: normalizedPhone,
+      phone2: _secondaryPhoneController.text.trim().isEmpty
+          ? null
+          : '+994${_secondaryPhoneController.text.trim()}',
       regionId: _regionId!,
       address: _addressController.text.trim(),
       familyStatus: _familyStatus!,
@@ -481,6 +487,7 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
           finController: _finController,
           seriaNumberController: _seriaNumberController,
           phoneController: _phoneController,
+          secondaryPhoneController: _secondaryPhoneController,
           salaryController: _personalSalaryController,
           noteController: _noteController,
           familyStatus: _familyStatus,

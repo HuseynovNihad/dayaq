@@ -6,10 +6,12 @@ import '../../../../../core/extensions/context_extensions.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../domain/entities/family_details_entity.dart';
 import '../../../domain/entities/family_entity.dart';
+import '../../../data/models/family_details_model.dart';
 import 'detail_common_widgets.dart';
 
 class FamilyDetailsHeader extends StatelessWidget {
   const FamilyDetailsHeader({
+    super.key,
     required this.family,
     required this.showActions,
     required this.details,
@@ -30,6 +32,7 @@ class FamilyDetailsHeader extends StatelessWidget {
     return '${parts.first.substring(0, 1)}${parts.last.substring(0, 1)}'
         .toUpperCase();
   }
+
   String get _statusLabel {
     return switch (family.status.trim().toLowerCase()) {
       'active' || 'active_help' => 'Aktiv yardım',
@@ -39,16 +42,70 @@ class FamilyDetailsHeader extends StatelessWidget {
       _ => family.status,
     };
   }
-  Future<void> _call(BuildContext context) async {
-    final phone = family.phone.trim();
-    if (phone.isEmpty) return;
-    final uri = Uri(scheme: 'tel', path: phone);
-    if (!await launchUrl(uri) && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Zəng başlatmaq mümkün olmadı.')),
-      );
+
+  String get _secondaryPhone {
+    final value = details;
+    return value is FamilyDetailsModel ? (value.phone2 ?? '').trim() : '';
+  }
+
+  Future<void> _callNumber(BuildContext context, String phone) async {
+    if (phone.trim().isEmpty) return;
+    final uri = Uri(scheme: 'tel', path: phone.trim());
+    try {
+      if (!await launchUrl(uri) && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Zəng başlatmaq mümkün olmadı.')),
+        );
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Zəng başlatmaq mümkün olmadı.')),
+        );
+      }
     }
   }
+
+  Future<void> _call(BuildContext context) async {
+    final primary = family.phone.trim();
+    final secondary = _secondaryPhone;
+    final numbers = <({String label, String value})>[
+      if (primary.isNotEmpty) (label: 'Əsas nömrə', value: primary),
+      if (secondary.isNotEmpty && secondary != primary)
+        (label: 'Əlavə nömrə', value: secondary),
+    ];
+    if (numbers.isEmpty) return;
+    if (numbers.length == 1) {
+      await _callNumber(context, numbers.first.value);
+      return;
+    }
+    await showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheetContext) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const ListTile(title: Text('Zəng üçün nömrə seçin')),
+              for (final number in numbers)
+                ListTile(
+                  leading: const Icon(Icons.call_outlined),
+                  title: Text(number.label),
+                  subtitle: Text(number.value),
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    _callNumber(context, number.value);
+                  },
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Future<void> _openMap(BuildContext context) async {
     final lat = details?.lat ?? family.lat;
     final lng = details?.lng ?? family.lng;
@@ -64,13 +121,15 @@ class FamilyDetailsHeader extends StatelessWidget {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
     final date = family.createdAt == null
         ? ''
         : DateFormat('dd.MM.yyyy').format(family.createdAt!);
-    final hasPhone = family.phone.trim().isNotEmpty;
+    final hasPhone =
+        family.phone.trim().isNotEmpty || _secondaryPhone.isNotEmpty;
     final hasCoordinates =
         (details?.lat ?? family.lat) != null &&
         (details?.lng ?? family.lng) != null;
@@ -215,7 +274,11 @@ class _HeaderAction extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: isTablet ? 21 : 17.r, color: const Color(0xFF173DA8)),
+              Icon(
+                icon,
+                size: isTablet ? 21 : 17.r,
+                color: const Color(0xFF173DA8),
+              ),
               SizedBox(width: 6.w),
               Flexible(
                 child: Text(
