@@ -59,7 +59,7 @@ class _IncomeInformationFormState extends State<IncomeInformationForm> {
   ];
 
   static const List<String> _subtitles = [
-    'Əsas iş yerindən gəlir',
+    'Müraciət edən şəxs və ailə üzvlərinin əməkhaqqı cəmi',
     'Gündəlik / mövsümi fəhləlik',
     'Dövlət sosial ödənişləri və müavinətlər',
     'Tələbə və ya əlillik təqaüdü',
@@ -131,7 +131,7 @@ class _IncomeInformationFormState extends State<IncomeInformationForm> {
     return '${amount.toStringAsFixed(0)}.00';
   }
 
-  InputDecoration _inputDecoration() {
+  InputDecoration _inputDecoration({bool isLocked = false}) {
     final radius = BorderRadius.circular(13.regR(context));
 
     return InputDecoration(
@@ -143,7 +143,14 @@ class _IncomeInformationFormState extends State<IncomeInformationForm> {
         fontWeight: FontWeight.w600,
       ),
       filled: true,
-      fillColor: Colors.white,
+      fillColor: isLocked ? const Color(0xFFF3F1EE) : Colors.white,
+      prefixIcon: isLocked
+          ? Icon(
+              Icons.lock_outline_rounded,
+              size: 18.regR(context),
+              color: AppColors.textSecondary,
+            )
+          : null,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 13.regW(context),
         vertical: 14.regH(context),
@@ -192,10 +199,13 @@ class _IncomeInformationFormState extends State<IncomeInformationForm> {
 
           TextField(
             controller: widget.controllers[index],
+            readOnly: index == 0,
+            showCursor: index != 0,
+            enableInteractiveSelection: index != 0,
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.next,
             inputFormatters: _inputFormatters,
-            decoration: _inputDecoration(),
+            decoration: _inputDecoration(isLocked: index == 0),
           ),
         ],
       ),

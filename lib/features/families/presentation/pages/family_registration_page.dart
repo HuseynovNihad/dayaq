@@ -46,6 +46,7 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
   final _finController = TextEditingController();
   final _seriaNumberController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _personalSalaryController = TextEditingController();
   final _noteController = TextEditingController();
   int? _familyStatus;
   // ADDIM 2 — Ünvan məlumatları
@@ -85,6 +86,7 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
     _finController.dispose();
     _seriaNumberController.dispose();
     _phoneController.dispose();
+    _personalSalaryController.dispose();
     _noteController.dispose();
     _addressController.dispose();
     for (final member in _members) {
@@ -110,6 +112,7 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
     _firstNameController.clear();
     _lastNameController.clear();
     _phoneController.clear();
+    _personalSalaryController.clear();
     _noteController.clear();
     _addressController.clear();
     _socialWorkerNotesController.clear();
@@ -217,6 +220,22 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
     return int.tryParse(controller.text.trim()) ?? 0;
   }
 
+  int get _membersSalaryTotal => _members.fold<int>(
+    0,
+    (total, member) => total + _moneyValue(member.incomeController),
+  );
+
+  int get _calculatedSalary =>
+      _moneyValue(_personalSalaryController) + _membersSalaryTotal;
+
+  void _syncCalculatedSalary() {
+    final value = _calculatedSalary.toString();
+
+    if (_incomeControllers[0].text != value) {
+      _incomeControllers[0].text = value;
+    }
+  }
+
   bool _hasAnyMemberInput(FamilyMemberDraft member) {
     return member.firstNameController.text.trim().isNotEmpty ||
         member.lastNameController.text.trim().isNotEmpty ||
@@ -252,7 +271,13 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
         return;
       }
     }
-    final moneyControllers = [..._incomeControllers, ..._expenseControllers];
+    _syncCalculatedSalary();
+
+    final moneyControllers = [
+      _personalSalaryController,
+      ..._incomeControllers,
+      ..._expenseControllers,
+    ];
     if (moneyControllers.any(
       (c) =>
           c.text.trim().isNotEmpty &&
@@ -423,6 +448,8 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
 
   // ADDIM 3 — Ailə üzvləri könüllüdür
   void _continueFromMembers() {
+    _syncCalculatedSalary();
+
     setState(() {
       _currentStep = 4;
     });
@@ -454,6 +481,7 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
           finController: _finController,
           seriaNumberController: _seriaNumberController,
           phoneController: _phoneController,
+          salaryController: _personalSalaryController,
           noteController: _noteController,
           familyStatus: _familyStatus,
           onFamilyStatusChanged: (value) {

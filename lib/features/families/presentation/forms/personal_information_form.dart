@@ -17,6 +17,7 @@ class PersonalInformationForm extends StatelessWidget {
     required this.finController,
     required this.seriaNumberController,
     required this.phoneController,
+    required this.salaryController,
     required this.noteController,
     required this.familyStatus,
     required this.onFamilyStatusChanged,
@@ -29,6 +30,7 @@ class PersonalInformationForm extends StatelessWidget {
   final TextEditingController finController;
   final TextEditingController seriaNumberController;
   final TextEditingController phoneController;
+  final TextEditingController salaryController;
   final TextEditingController noteController;
 
   final int? familyStatus;
@@ -249,6 +251,22 @@ class PersonalInformationForm extends StatelessWidget {
               LengthLimitingTextInputFormatter(9),
             ],
             validator: AppValidators.phone,
+          ),
+
+          SizedBox(height: 18.regH(context)),
+
+          // Əmək haqqı — yalnız lokal hesablamada istifadə olunur.
+          // Backend-ə ayrıca field kimi göndərilmir.
+          AppTextField(
+            label: 'Əmək haqqı',
+            hintText: '0 AZN',
+            controller: salaryController,
+            keyboardType: TextInputType.number,
+            textInputAction: TextInputAction.next,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(9),
+            ],
           ),
 
           SizedBox(height: 18.regH(context)),
