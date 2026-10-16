@@ -78,7 +78,7 @@ class _HomeView extends StatelessWidget {
                                   const HomeWelcomeBanner(),
                                   SizedBox(height: isTablet ? 24 : 20),
                                   HomeAddFamilyButton(
-                                    onPressed: () => context.go(
+                                    onPressed: () => context.push(
                                       AppRoutes.familyRegistration,
                                     ),
                                   ),
@@ -102,7 +102,12 @@ class _HomeView extends StatelessWidget {
                                                 context.go(AppRoutes.families);
                                               },
                                               onFamilyTap: (family) {
-                                                // TODO: Ailə detalları, family.id.
+                                                context.push(
+                                                  AppRoutes.familyDetailsPath(
+                                                    family.id,
+                                                  ),
+                                                  extra: family,
+                                                );
                                               },
                                             ),
                                           ),
@@ -125,7 +130,12 @@ class _HomeView extends StatelessWidget {
                                             context.go(AppRoutes.families),
 
                                         onFamilyTap: (family) {
-                                          // TODO: Ailə detalları, family.id.
+                                          context.push(
+                                            AppRoutes.familyDetailsPath(
+                                              family.id,
+                                            ),
+                                            extra: family,
+                                          );
                                         },
                                       ),
                                       SizedBox(height: isTablet ? 32 : 28),

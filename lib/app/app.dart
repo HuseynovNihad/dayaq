@@ -11,14 +11,18 @@ import '../core/storage/token_storage.dart';
 import '../core/theme/app_theme.dart';
 
 class DayaqApp extends StatefulWidget {
-  const DayaqApp({super.key});
+  const DayaqApp({super.key, required this.initialLocation});
+
+  final String initialLocation;
 
   @override
   State<DayaqApp> createState() => _DayaqAppState();
 }
 
 class _DayaqAppState extends State<DayaqApp> {
-  late final GoRouter _router = createAppRouter();
+  late final GoRouter _router = createAppRouter(
+    initialLocation: widget.initialLocation,
+  );
 
   final NotificationService _notificationService = sl<NotificationService>();
 
@@ -32,6 +36,7 @@ class _DayaqAppState extends State<DayaqApp> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
+
       _initializeNotificationNavigation();
     });
   }
@@ -47,6 +52,7 @@ class _DayaqAppState extends State<DayaqApp> {
       debugPrint('[FCM] Notification navigation initialized');
     } catch (error, stackTrace) {
       debugPrint('[FCM] Navigation initialization failed: $error');
+
       debugPrintStack(stackTrace: stackTrace);
     }
   }
@@ -65,9 +71,10 @@ class _DayaqAppState extends State<DayaqApp> {
 
       _router.go(destination);
 
-      debugPrint('[FCM] Notification opened');
+      debugPrint('[FCM] Notification opened: $destination');
     } catch (error, stackTrace) {
       debugPrint('[FCM] Notification navigation failed: $error');
+
       debugPrintStack(stackTrace: stackTrace);
     } finally {
       _handlingNotificationTap = false;

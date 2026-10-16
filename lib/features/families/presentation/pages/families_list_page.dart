@@ -550,7 +550,7 @@ class _FamiliesListViewState extends State<_FamiliesListView> {
       shadowColor: Colors.black.withValues(alpha: 0.08),
       borderRadius: BorderRadius.circular(16.r),
       child: InkWell(
-        onTap: () => context.go(AppRoutes.familyRegistration),
+        onTap: () => context.push(AppRoutes.familyRegistration),
         borderRadius: BorderRadius.circular(16.r),
         child: Container(
           height: isTablet ? 58 : 50.h,

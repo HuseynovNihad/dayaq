@@ -9,7 +9,7 @@ abstract final class ApiEndpoints {
   static String familyDetails(int id) => '$families/$id';
 
   // FAMILY REGISTRATION
-  static const String registerFamily = '/api/volunteerform';
+  static const String registerFamily = '/api/volunterform';
 
   static const String about = '/api/about';
   static const String termCondition = '/api/term-condition';

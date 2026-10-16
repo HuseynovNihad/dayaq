@@ -20,6 +20,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       ApiEndpoints.login,
       data: request.toJson(),
       options: Options(
+        headers: {'Accept': 'application/json'},
         contentType: Headers.jsonContentType,
         followRedirects: false,
         validateStatus: (status) {
@@ -41,7 +42,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> logout() async {
     await _dio.post<void>(
       ApiEndpoints.logout,
-      options: Options(contentType: Headers.jsonContentType),
+      options: Options(
+        headers: {'Accept': 'application/json'},
+        contentType: Headers.jsonContentType,
+      ),
     );
   }
 }
