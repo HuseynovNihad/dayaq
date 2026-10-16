@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1428 2048" width="1428" height="2048">
+  <defs>
+    <clipPath id="pinClip">
+      <path d="M714 12C320 12 0 326 0 714c0 264 129 500 318 689 234 234 365 455 396 633 31-178 162-399 396-633 189-189 318-425 318-689C1428 326 1108 12 714 12z"/>
+    </clipPath>
+    <mask id="centerHoleMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1428" height="2048">
+      <rect width="1428" height="2048" fill="white"/>
+      <circle cx="714" cy="760" r="275" fill="black"/>
+    </mask>
+  </defs>
+
+  <g clip-path="url(#pinClip)" mask="url(#centerHoleMask)">
+    <rect width="1428" height="2048" fill="none"/>
+
+    <!-- dark blue -->
+    <polygon fill="#1A73E8" points="0,375 470,0 925,0 500,585"/>
+
+    <!-- light blue -->
+    <polygon fill="#5383EC" points="925,0 1428,0 1428,520 900,910 500,585"/>
+
+    <!-- red -->
+    <polygon fill="#EA4335" points="0,375 500,585 0,1120"/>
+
+    <!-- yellow -->
+    <polygon fill="#FBBC04" points="0,1120 500,585 900,910 400,1540"/>
+
+    <!-- green -->
+    <polygon fill="#34A853" points="900,910 1428,520 1428,1100 714,2048 400,1540"/>
+  </g>
+</svg>

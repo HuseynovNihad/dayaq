@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../../../core/extensions/context_extensions.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../domain/entities/family_details_entity.dart';
 import '../../../domain/entities/family_entity.dart';
-import '../../../data/models/family_details_model.dart';
 import 'detail_common_widgets.dart';
+import 'navigation_app_picker.dart';
 
 class FamilyOverviewTab extends StatelessWidget {
   const FamilyOverviewTab({required this.family, required this.details});
@@ -20,9 +19,6 @@ class FamilyOverviewTab extends StatelessWidget {
     final lat = details.lat ?? family.lat;
     final lng = details.lng ?? family.lng;
     final hasCoordinates = lat != null && lng != null;
-    final phone2 = details is FamilyDetailsModel
-        ? ((details as FamilyDetailsModel).phone2 ?? '').trim()
-        : '';
     return Column(
       children: [
         DetailCard(
@@ -32,16 +28,11 @@ class FamilyOverviewTab extends StatelessWidget {
               const DetailSectionTitle('AİLƏ VƏ ƏLAQƏ MƏLUMATLARI'),
               SizedBox(height: 8.h),
               DetailInfoRow(
-                label: 'Əsas telefon nömrəsi',
+                label: 'Telefon nömrəsi',
                 value: family.phone.trim().isEmpty
                     ? 'Məlumat yoxdur'
                     : family.phone,
               ),
-              if (phone2.isNotEmpty)
-                DetailInfoRow(
-                  label: 'Əlavə telefon nömrəsi',
-                  value: phone2,
-                ),
               DetailInfoRow(
                 label: 'Qeydiyyat nömrəsi',
                 value: family.registerNumber.trim().isEmpty
@@ -129,16 +120,11 @@ class FamilyOverviewTab extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton.icon(
-                    onPressed: () async {
-                      final uri = Uri.https('www.google.com', '/maps/search/', {
-                        'api': '1',
-                        'query': '$lat,$lng',
-                      });
-                      await launchUrl(
-                        uri,
-                        mode: LaunchMode.externalApplication,
-                      );
-                    },
+                    onPressed: () => NavigationAppPicker.show(
+                      context,
+                      latitude: lat,
+                      longitude: lng,
+                    ),
                     icon: Icon(
                       Icons.map_rounded,
                       size: 19.r,
