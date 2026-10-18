@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/app_shell.dart';
+import '../di/injection.dart';
+import '../storage/token_storage.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/families/domain/entities/family_entity.dart';
 import '../../features/families/presentation/pages/families_list_page.dart';
@@ -33,7 +35,30 @@ GoRouter createAppRouter({String? initialLocation}) {
       GoRoute(
         path: AppRoutes.familyRegistration,
         parentNavigatorKey: rootNavigatorKey,
-        builder: (context, state) => const FamilyRegistrationPage(),
+        builder: (context, state) => FutureBuilder<String?>(
+          future: _draftOwnerEmail(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            }
+            final owner = snapshot.data;
+            if (owner == null || owner.isEmpty) {
+              return Scaffold(
+                appBar: AppBar(title: const Text('Yeni Ailə Qeydiyyatı')),
+                body: const Center(
+                  child: Text('Qeydiyyat üçün yenidən daxil olun.'),
+                ),
+              );
+            }
+            return FamilyRegistrationPage(
+              key: ValueKey(state.uri.toString()),
+              draftOwnerId: owner,
+              draftId: state.uri.queryParameters['draftId'],
+            );
+          },
+        ),
       ),
       GoRoute(
         path: AppRoutes.familyDetails,
@@ -133,4 +158,12 @@ GoRouter createAppRouter({String? initialLocation}) {
       );
     },
   );
+}
+
+
+Future<String?> _draftOwnerEmail() async {
+  final tokens = sl<TokenStorage>();
+  if (!await tokens.hasToken()) return null;
+  final email = (await tokens.getEmail())?.trim().toLowerCase();
+  return email == null || email.isEmpty ? null : email;
 }

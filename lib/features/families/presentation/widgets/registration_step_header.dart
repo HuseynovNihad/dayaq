@@ -6,76 +6,130 @@ class RegistrationStepHeader extends StatelessWidget {
     super.key,
     required this.currentStep,
     this.totalSteps = 7,
+    this.onSave,
     this.onCancel,
+    this.isSaving = false,
+    this.actionsEnabled = true,
   });
 
   final int currentStep;
   final int totalSteps;
+  final VoidCallback? onSave;
   final VoidCallback? onCancel;
+  final bool isSaving;
+  final bool actionsEnabled;
 
   @override
   Widget build(BuildContext context) {
     const primary = Color(0xFFF4B033);
+    final progress = totalSteps > 0
+        ? (currentStep / totalSteps).clamp(0.0, 1.0).toDouble()
+        : 0.0;
+
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           children: [
             Container(
-              width: 28.r,
-              height: 28.r,
+              width: isTablet ? 38 : 34.r,
+              height: isTablet ? 38 : 34.r,
               alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFFFFDEA2),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFEAC8),
+                borderRadius: BorderRadius.circular(11.r),
               ),
               child: Text(
                 '$currentStep',
-                style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700),
-              ),
-            ),
-            SizedBox(width: 8.w),
-            Expanded(
-              child: Text(
-                'Addım $currentStep / $totalSteps',
                 style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF514438),
+                  fontSize: isTablet ? 17 : 15.sp,
+                  fontWeight: FontWeight.w800,
+                  color: const Color(0xFF765016),
                 ),
               ),
             ),
+            SizedBox(width: 8.w),
+            Text(
+              '/ $totalSteps',
+              style: TextStyle(
+                color: const Color(0xFF827A71),
+                fontSize: isTablet ? 17 : 14.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const Spacer(),
+            TextButton.icon(
+              onPressed: actionsEnabled && !isSaving ? onSave : null,
+              style: TextButton.styleFrom(
+                visualDensity: VisualDensity.compact,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                foregroundColor: const Color(0xFF856021),
+                backgroundColor: const Color(0xFFFFF2DE),
+                disabledForegroundColor: const Color(
+                  0xFF856021,
+                ).withValues(alpha: 0.5),
+                padding: EdgeInsets.symmetric(
+                  horizontal: isTablet ? 16 : 12.w,
+                  vertical: isTablet ? 11 : 9.h,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(11.r),
+                ),
+              ),
+              icon: isSaving
+                  ? SizedBox(
+                      width: 17.r,
+                      height: 17.r,
+                      child: const CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Color(0xFF856021),
+                      ),
+                    )
+                  : Icon(
+                      Icons.bookmark_outline_rounded,
+                      size: isTablet ? 22 : 19.sp,
+                    ),
+              label: Text(
+                isSaving ? 'Saxlanılır' : 'Yadda saxla',
+                style: TextStyle(
+                  fontSize: isTablet ? 16 : 13.sp,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            SizedBox(width: 6.w),
             TextButton(
-              onPressed: onCancel,
+              onPressed: actionsEnabled && !isSaving ? onCancel : null,
+              style: TextButton.styleFrom(
+                visualDensity: VisualDensity.compact,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                foregroundColor: const Color(0xFF9B6C68),
+                padding: EdgeInsets.symmetric(
+                  horizontal: isTablet ? 12 : 9.w,
+                  vertical: isTablet ? 11 : 9.h,
+                ),
+              ),
               child: Text(
                 'Ləğv et',
                 style: TextStyle(
-                  color: const Color(0xFFD32F2F),
-                  fontSize: 13.sp,
+                  fontSize: isTablet ? 16 : 13.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
           ],
         ),
-        SizedBox(height: 10.h),
-        Row(
-          children: List.generate(totalSteps, (index) {
-            return Expanded(
-              child: Container(
-                margin: EdgeInsets.only(
-                  right: index == totalSteps - 1 ? 0 : 5.w,
-                ),
-                height: 7.h,
-                decoration: BoxDecoration(
-                  color: index < currentStep
-                      ? primary
-                      : const Color(0xFFE4E4E4),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-              ),
-            );
-          }),
+        SizedBox(height: isTablet ? 12 : 10.h),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(99.r),
+          child: LinearProgressIndicator(
+            value: progress,
+            minHeight: isTablet ? 7 : 6.h,
+            backgroundColor: const Color(0xFFEDE9E2),
+            valueColor: const AlwaysStoppedAnimation<Color>(primary),
+          ),
         ),
       ],
     );

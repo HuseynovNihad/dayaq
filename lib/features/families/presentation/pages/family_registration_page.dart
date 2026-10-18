@@ -1,5 +1,7 @@
 import '../registration_responsive.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
+import '../../data/local/registration_draft_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
@@ -20,19 +22,32 @@ import '../widgets/registration_step_header.dart';
 import 'family_registration_success_page.dart';
 
 class FamilyRegistrationPage extends StatefulWidget {
-  const FamilyRegistrationPage({super.key});
+  const FamilyRegistrationPage({
+    super.key,
+    this.draftId,
+    required this.draftOwnerId,
+  });
+
+  final String? draftId;
+  final String draftOwnerId;
   @override
   State<FamilyRegistrationPage> createState() => _FamilyRegistrationPageState();
 }
 
 class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
   int _currentStep = 1;
+  String? _activeDraftId;
+  bool _isSaving = false;
   bool _isSubmitting = false;
   late final FamiliesBloc _familiesBloc;
   @override
   void initState() {
     super.initState();
     _familiesBloc = sl<FamiliesBloc>();
+    _activeDraftId = widget.draftId;
+    if (_activeDraftId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _restoreDraft());
+    }
   }
 
   // Form key-lər
@@ -150,6 +165,185 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
     });
   }
 
+  // A draft may be saved at any step, without validating incomplete fields.
+  Future<void> _saveDraft() async {
+    if (_isSaving || _isSubmitting) return;
+    FocusManager.instance.primaryFocus?.unfocus();
+    _syncCalculatedSalary();
+    setState(() => _isSaving = true);
+    try {
+      final id =
+          _activeDraftId ?? DateTime.now().microsecondsSinceEpoch.toString();
+      final data = <String, dynamic>{
+        'id': id,
+        'updatedAt': DateTime.now().toIso8601String(),
+        'step': _currentStep,
+        'firstName': _firstNameController.text,
+        'lastName': _lastNameController.text,
+        'fin': _finController.text,
+        'seriaNumber': _seriaNumberController.text,
+        'phone': _phoneController.text,
+        'phone2': _secondaryPhoneController.text,
+        'personalSalary': _personalSalaryController.text,
+        'note': _noteController.text,
+        'familyStatus': _familyStatus,
+        'regionId': _regionId,
+        'address': _addressController.text,
+        'gps': _currentPosition == null
+            ? null
+            : <String, dynamic>{
+                'latitude': _currentPosition!.latitude,
+                'longitude': _currentPosition!.longitude,
+                'accuracy': _currentPosition!.accuracy,
+              },
+        'members': _members
+            .map(
+              (m) => <String, dynamic>{
+                'id': m.id,
+                'firstName': m.firstNameController.text,
+                'lastName': m.lastNameController.text,
+                'income': m.incomeController.text,
+                'relationId': m.relationId,
+                'birthday': m.birthday?.toIso8601String(),
+              },
+            )
+            .toList(),
+        'income': _incomeControllers.map((c) => c.text).toList(),
+        'expenses': _expenseControllers.map((c) => c.text).toList(),
+        'workerNote': _socialWorkerNotesController.text,
+        'documents': _documents
+            .map(
+              (d) => <String, dynamic>{
+                'id': d.id,
+                'title': d.title,
+                'name': d.name,
+                'path': d.path,
+                'sizeBytes': d.sizeBytes,
+                'isImage': d.isImage,
+              },
+            )
+            .toList(),
+      };
+      await RegistrationDraftStorage.upsert(widget.draftOwnerId, data);
+      _activeDraftId = id;
+      if (!mounted) return;
+      context.go(AppRoutes.home);
+    } catch (_) {
+      if (mounted) _showMessage('Qaralamanı yadda saxlamaq mümkün olmadı.');
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
+  }
+
+  Future<void> _restoreDraft() async {
+    try {
+      final items = await RegistrationDraftStorage.load(widget.draftOwnerId);
+      final draft = items.where((d) => d['id'] == _activeDraftId).firstOrNull;
+      if (draft == null || !mounted) {
+        if (mounted) _showMessage('Yadda saxlanmış forma tapılmadı.');
+        return;
+      }
+      String str(String key) => draft[key]?.toString() ?? '';
+      void restore(TextEditingController c, String key) => c.text = str(key);
+      restore(_firstNameController, 'firstName');
+      restore(_lastNameController, 'lastName');
+      restore(_finController, 'fin');
+      restore(_seriaNumberController, 'seriaNumber');
+      restore(_phoneController, 'phone');
+      restore(_secondaryPhoneController, 'phone2');
+      restore(_personalSalaryController, 'personalSalary');
+      restore(_noteController, 'note');
+      restore(_addressController, 'address');
+      restore(_socialWorkerNotesController, 'workerNote');
+      for (var i = 0; i < _incomeControllers.length; i++) {
+        final list = draft['income'];
+        if (list is List && i < list.length)
+          _incomeControllers[i].text = list[i]?.toString() ?? '';
+      }
+      for (var i = 0; i < _expenseControllers.length; i++) {
+        final list = draft['expenses'];
+        if (list is List && i < list.length)
+          _expenseControllers[i].text = list[i]?.toString() ?? '';
+      }
+      final members = draft['members'];
+      if (members is List) {
+        for (final item in members.whereType<Map>()) {
+          final m = FamilyMemberDraft(
+            id: (item['id'] as num?)?.toInt() ?? _members.length + 1,
+          );
+          m.firstNameController.text = item['firstName']?.toString() ?? '';
+          m.lastNameController.text = item['lastName']?.toString() ?? '';
+          m.incomeController.text = item['income']?.toString() ?? '';
+          m.relationId = (item['relationId'] as num?)?.toInt();
+          m.birthday = DateTime.tryParse(item['birthday']?.toString() ?? '');
+          _members.add(m);
+        }
+      }
+      final docs = draft['documents'];
+      if (docs is List) {
+        for (final item in docs.whereType<Map>()) {
+          final path = item['path']?.toString() ?? '';
+          if (path.isEmpty || !await File(path).exists()) continue;
+          _documents.add(
+            FamilyLocalDocument(
+              id: item['id']?.toString() ?? path,
+              title: item['title']?.toString() ?? '',
+              name: item['name']?.toString() ?? '',
+              path: path,
+              sizeBytes: (item['sizeBytes'] as num?)?.toInt() ?? 0,
+              isImage: item['isImage'] == true,
+            ),
+          );
+        }
+      }
+      final gps = draft['gps'];
+      if (gps is Map && gps['latitude'] is num && gps['longitude'] is num) {
+        _currentPosition = Position(
+          latitude: (gps['latitude'] as num).toDouble(),
+          longitude: (gps['longitude'] as num).toDouble(),
+          timestamp: DateTime.now(),
+          accuracy: (gps['accuracy'] as num?)?.toDouble() ?? 0,
+          altitude: 0,
+          altitudeAccuracy: 0,
+          heading: 0,
+          headingAccuracy: 0,
+          speed: 0,
+          speedAccuracy: 0,
+        );
+      }
+      if (!mounted) return;
+      setState(() {
+        _familyStatus = (draft['familyStatus'] as num?)?.toInt();
+        _regionId = (draft['regionId'] as num?)?.toInt();
+        _currentStep = ((draft['step'] as num?)?.toInt() ?? 1).clamp(1, 7);
+        _syncCalculatedSalary();
+      });
+    } catch (_) {
+      if (mounted) _showMessage('Qaralamanı bərpa etmək mümkün olmadı.');
+    }
+  }
+
+  // İstifadəçi təsdiqlədikdən sonra qaralamanı saxla.
+  Future<void> _confirmSaveDraft() async {
+    if (_isSaving || _isSubmitting) return;
+
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    final shouldSave = await AppAlertDialog.showConfirmation(
+      context: context,
+      title: 'Formanı yadda saxla?',
+      message:
+          'Daxil etdiyiniz məlumatlar qaralama olaraq saxlanılacaq. '
+          'İstədiyiniz zaman ana səhifədən formaya davam edə bilərsiniz.',
+      confirmLabel: 'Bəli, yadda saxla',
+      cancelLabel: 'Geri qayıt',
+      isDestructive: false,
+    );
+
+    if (!mounted || !shouldSave || _isSaving || _isSubmitting) return;
+    await _saveDraft();
+  }
+
   // Qeydiyyatdan çıxış
   Future<void> _cancelRegistration() async {
     if (_isSubmitting) return;
@@ -163,8 +357,19 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
       isDestructive: true,
     );
     if (!shouldCancel || !mounted) return;
+    if (_activeDraftId != null) {
+      try {
+        await RegistrationDraftStorage.delete(
+          widget.draftOwnerId,
+          _activeDraftId!,
+        );
+      } catch (_) {
+        if (mounted) _showMessage('Qaralamanı silmək mümkün olmadı.');
+        return;
+      }
+    }
     _clearForm();
-    context.go(AppRoutes.home);
+    if (mounted) context.go(AppRoutes.home);
   }
 
   // Əvvəlki mərhələyə qayıt
@@ -178,7 +383,7 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
 
   // Növbəti mərhələyə keçid
   void _nextStep() {
-    if (_isSubmitting) return;
+    if (_isSubmitting || _isSaving) return;
     FocusScope.of(context).unfocus();
     switch (_currentStep) {
       case 1:
@@ -380,7 +585,19 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
     }
   }
 
-  void _finishRegistration() {
+  Future<void> _finishRegistration() async {
+    if (!mounted) return;
+    if (_activeDraftId != null) {
+      try {
+        await RegistrationDraftStorage.delete(
+          widget.draftOwnerId,
+          _activeDraftId!,
+        );
+      } catch (_) {
+        if (mounted) _showMessage('Qaralamanı silmək mümkün olmadı.');
+        return;
+      }
+    }
     if (!mounted) return;
     _clearForm();
     context.go(AppRoutes.home);
@@ -646,7 +863,7 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
                           horizontal: context.registrationIsTablet
                               ? 32
                               : 18.regW(context),
-                          vertical: 16.regH(context),
+                          vertical: 10.regH(context),
                         ),
                         keyboardDismissBehavior:
                             ScrollViewKeyboardDismissBehavior.onDrag,
@@ -656,13 +873,14 @@ class _FamilyRegistrationPageState extends State<FamilyRegistrationPage> {
                               constraints: const BoxConstraints(maxWidth: 920),
                               child: RegistrationStepHeader(
                                 currentStep: _currentStep,
-                                onCancel: _isSubmitting
-                                    ? () {}
-                                    : _cancelRegistration,
+                                onSave: _confirmSaveDraft,
+                                onCancel: _cancelRegistration,
+                                isSaving: _isSaving,
+                                actionsEnabled: !_isSaving && !_isSubmitting,
                               ),
                             ),
                           ),
-                          SizedBox(height: 20.regH(context)),
+                          SizedBox(height: 12.regH(context)),
                           Center(
                             child: ConstrainedBox(
                               constraints: const BoxConstraints(maxWidth: 920),

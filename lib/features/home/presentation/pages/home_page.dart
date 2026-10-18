@@ -16,6 +16,7 @@ import '../widgets/home_add_family_button.dart';
 import '../widgets/home_statistics_section.dart';
 import '../widgets/home_recent_families_section.dart';
 import '../widgets/home_nearby_registrations.dart';
+import '../widgets/home_registration_drafts_section.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -82,6 +83,8 @@ class _HomeView extends StatelessWidget {
                                       AppRoutes.familyRegistration,
                                     ),
                                   ),
+                                  SizedBox(height: isTablet ? 20 : 16),
+                                  const HomeRegistrationDraftsSection(),
                                   SizedBox(height: isTablet ? 32 : 28),
                                   if (state is HomeLoaded) ...[
                                     HomeStatisticsSection(
